@@ -1,0 +1,32 @@
+# تطبيع نهايات الأسطر تلقائياً
+* text=auto
+
+# ملفات PHP و Blade و JS و CSS → دائماً LF
+*.php    text eol=lf
+*.blade.php text eol=lf
+*.js     text eol=lf
+*.css    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.html   text eol=lf
+*.xml    text eol=lf
+*.svg    text eol=lf
+*.env    text eol=lf
+*.txt    text eol=lf
+
+# ملفات ثنائية → لا تعديل عليها
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.webp   binary
+*.ttf    binary
+*.woff   binary
+*.woff2  binary
+*.eot    binary
+*.otf    binary
+*.zip    binary
+*.mp4    binary
+*.mp3    binary
+*.pdf    binary
