@@ -1,3 +1,3 @@
 <div>
-    Customer Groups
+    Customer Groups blade
 </div>
