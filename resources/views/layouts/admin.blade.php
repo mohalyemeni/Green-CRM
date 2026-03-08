@@ -11,6 +11,9 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{asset('backend/assets/images/favicon.ico')}}">
 
+    <!-- Sweet Alert css-->
+    <link href="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
     <!-- Layout config Js -->
     <script src="{{asset('backend/assets/js/layout.js')}}"></script>
     <!-- Bootstrap Css -->
@@ -113,6 +116,18 @@
     <script src="{{asset('backend/assets/libs/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('backend/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
     <script src="{{asset('backend/assets/js/plugins.js')}}"></script>
+
+    <!-- list.js min js -->
+    <script src="{{asset('backend/assets/libs/list.js/list.min.js')}}"></script>
+
+    <!--list pagination js-->
+    <script src="{{asset('backend/assets/libs/list.pagination.js/list.pagination.min.js')}}"></script>
+
+    <!-- crm leads init -->
+    <script src="{{asset('backend/assets/js/pages/crm-leads.init.js')}}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
     <!-- App js -->
     <script src="{{asset('backend/assets/js/app.js')}}"></script>

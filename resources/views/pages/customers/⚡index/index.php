@@ -39,12 +39,6 @@ new #[Title('Customers')] class extends Component
         'sortDirection' => ['except' => 'asc'],
     ];
 
-    public function render()
-    {
-        // تأكد من المسار حسب هيكل المجلدات لديك
-        return view('pages.customers.index');
-    }
-
     #[Computed]
     public function customers()
     {
@@ -159,11 +153,5 @@ new #[Title('Customers')] class extends Component
             ->when($this->status, fn($q) => $q->where('status', $this->status))
             ->orderBy($this->sortField, $this->sortDirection)
             ->get();
-    }
-
-    public function render()
-    {
-        // تأكد من المسار حسب هيكل المجلدات لديك
-        return view('pages.customers.index');
     }
 };

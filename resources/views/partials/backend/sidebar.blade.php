@@ -78,15 +78,9 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.employees.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">employees</span>
-                    </a>
 
-                    <a class="nav-link menu-link" href="{{route('admin.index_route')}}">
+                    <a class="nav-link menu-link" href="{{route('admin.customers.index')}}">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">customers</span>
-                    </a>
-                    <a class="nav-link menu-link" href="{{route('admin.customergroup.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">customer group</span>
                     </a>
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">

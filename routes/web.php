@@ -41,8 +41,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
         Route::resource('tags', TagController::class);
-        Route::livewire('employees/index', 'employees.index')->name('employees.index');
-        Route::livewire('customergroup/index', 'pages::customergroup.index')->name('customergroup.index');
+        Route::livewire('/customers', 'pages::customers.index')->name('customers.index');
     });
     Route::resource('category', CategoryController::class);
 });
