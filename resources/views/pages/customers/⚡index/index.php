@@ -11,7 +11,6 @@ use Livewire\Attributes\Computed;
 new #[Title('Customers')] class extends Component
 {
     use WithPagination, WithFileUploads;
-
     // Filters
     public $search = '';
     public $country = '';
