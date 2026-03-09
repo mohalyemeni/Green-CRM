@@ -1,5 +1,5 @@
 @extends('layouts.admin')
 @section('title', 'لوحة التحكم')
 @section('content')
-<livewire:pages.customers.index />
+<h3>مرحباً بعودتك</h3>
 @endsection

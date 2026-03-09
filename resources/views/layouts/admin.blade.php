@@ -62,7 +62,7 @@
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item"><a href="{{route('admin.index_route')}}">الرئيسية</a></li>
-                                        <li class="breadcrumb-item active">{{$title}}</li>
+                                        <li class="breadcrumb-item active">{{$title ?? ''}} @yield('title')</li>
                                     </ol>
                                 </div>
 
