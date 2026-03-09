@@ -18,9 +18,7 @@ use App\Http\Controllers\Backend\TagController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [BackendController::class, 'login']);
 
 // Route::get('/', [FrontendController::class, 'index'])->name('frontend.index');
 // Route::get('/cart', [FrontendController::class, 'cart'])->name('frontend.cart');
