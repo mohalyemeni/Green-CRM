@@ -1,5 +1,20 @@
-@section('title', 'لعملاء ')
-<div>
+@section('title', 'بيانات العملاء')
+<div x-data="{
+    selectedIds: @entangle('selectedIds'),
+    sortField: @entangle('sortField'),
+    sortDirection: @entangle('sortDirection'),
+    sortBy(field) {
+        $wire.sortBy(field);
+    },
+    toggleAll() {
+        let checkboxes = document.querySelectorAll('input[name=chk_child]');
+        if (this.selectedIds.length < checkboxes.length) {
+            this.selectedIds = Array.from(checkboxes).map(el => el.value);
+        } else {
+            this.selectedIds = [];
+        }
+    }
+}">
     <!-- Start right Content here -->
     <!-- ============================================================== -->
     <div class="row">
@@ -8,29 +23,58 @@
                 <div class="card-header border-0">
 
                     <div class="row g-4 align-items-center">
-                        <div class="col-sm-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="Search for...">
-                                <i class="ri-search-line search-icon"></i>
+                        <div class="col-sm-6">
+                            <div class="search-box position-relative" x-data="{ search: @entangle('search') }">
+                                <input type="text"
+                                    class="form-control search bg-light border-light"
+                                    placeholder="ابحث عن العميل، الإيميل، أو الرقم..."
+                                    wire:model.lazy="search">
+
+                                <i class="ri-search-line search-icon" wire:loading.remove wire:target="search"></i>
+
+                                <div class="spinner-border spinner-border-sm search-icon text-primary"
+                                    role="status" wire:loading wire:target="search">
+                                </div>
+
+                                <button type="button"
+                                    x-show="search.length > 0"
+                                    x-on:click="search = ''; $wire.set('search', '')"
+                                    class="btn btn-link position-absolute end-0 top-0 h-100 text-decoration-none text-muted"
+                                    style="padding-right: 10px; z-index: 10;">
+                                    <i class="ri-close-line fs-18"></i>
+                                </button>
                             </div>
                         </div>
+
                         <div class="col-sm-auto ms-auto">
                             <div class="hstack gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                                <button type="button" class="btn btn-info" data-bs-toggle="offcanvas" href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i> Fliters</button>
-                                <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Add Leads</button>
-                                <span class="dropdown">
-                                    <button class="btn btn-soft-info btn-icon fs-14" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ri-settings-4-line"></i>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="#">Copy</a></li>
-                                        <li><a class="dropdown-item" href="#">Move to pipline</a></li>
-                                        <li><a class="dropdown-item" href="#">Add to exceptions</a></li>
-                                        <li><a class="dropdown-item" href="#">Switch to common form view</a></li>
-                                        <li><a class="dropdown-item" href="#">Reset form view to default</a></li>
-                                    </ul>
-                                </span>
+                                <div x-show="selectedIds.length > 0" x-cloak x-transition>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-soft-danger add-btn"
+                                            @click="if(confirm('هل أنت متأكد من حذف السجلات المحددة؟')) $wire.deleteMultiple()">
+                                            <i class="ri-delete-bin-2-line"></i> (<span x-text="selectedIds.length"></span>)
+                                        </button>
+                                        <button type="button" class="btn btn-soft-info">
+                                            <i class="ri-printer-line"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-info" data-bs-toggle="offcanvas" href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i> Fliters</button>
+                                    <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Add Leads</button>
+                                    <span class="dropdown">
+                                        <button class="btn btn-soft-info btn-icon fs-14" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="ri-settings-4-line"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" href="#">Copy</a></li>
+                                            <li><a class="dropdown-item" href="#">Move to pipline</a></li>
+                                            <li><a class="dropdown-item" href="#">Add to exceptions</a></li>
+                                            <li><a class="dropdown-item" href="#">Switch to common form view</a></li>
+                                            <li><a class="dropdown-item" href="#">Reset form view to default</a></li>
+                                        </ul>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -48,15 +92,19 @@
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-3">
                             <h5 class="card-title mb-0">بيانات العملاء</h5>
+                            <p><small>عرض جميع بيانات العملاء</small></p>
                         </div>
 
                         <div class="col-sm-auto ms-auto">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="text-muted">Sort by: </span>
-                                <select class="form-control mb-0" data-choices data-choices-search-false id="choices-single-default">
-                                    <option value="Name">Name</option>
-                                    <option value="Company">Company</option>
-                                    <option value="Lead">Lead</option>
+                            <div class="d-flex align-items-center gap-2" wire:ignore>
+                                <span class="text-muted">عرض: </span>
+                                <select class="form-control mb-0"
+                                    wire:model.live="perPage">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="500">500</option>
                                 </select>
                             </div>
                         </div>
@@ -70,45 +118,111 @@
                                     <tr>
                                         <th scope="col" style="width: 50px;">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                                <input class="form-check-input" type="checkbox" id="checkAll"
+                                                    @change="toggleAll()"
+                                                    :checked="selectedIds.length > 0 && selectedIds.length === document.querySelectorAll('input[name=chk_child]').length">
                                             </div>
                                         </th>
 
-                                        <th class="sort" data-sort="name">Name</th>
-                                        <th class="sort" data-sort="company_name">Company</th>
-                                        <th class="sort" data-sort="leads_score">Leads Score</th>
-                                        <th class="sort" data-sort="phone">Phone</th>
-                                        <th class="sort" data-sort="location">Location</th>
-                                        <th class="sort" data-sort="tags">Tags</th>
-                                        <th class="sort" data-sort="date">Create Date</th>
-                                        <th class="sort" data-sort="action">Action</th>
+                                        <th @click="sortBy('customer_number')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>المعرف</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'customer_number'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'customer_number'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
+
+                                        <th @click="sortBy('name')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>اسم العميل</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'name'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'name'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
+
+                                        <th @click="sortBy('country')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>الدولة</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'country'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'country'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th @click="sortBy('email')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>الايميل</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'email'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'email'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th>رقم الهاتف</th>
+                                        <th @click="sortBy('status')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>الحالة</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'status'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'status'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th>انشئ في</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
+                                    @forelse($this->customers as $customer)
                                     <tr>
                                         <th scope="row">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                                                <input class="form-check-input" type="checkbox" name="chk_child"
+                                                    value="{{ $customer->id }}"
+                                                    x-model="selectedIds">
                                             </div>
                                         </th>
-                                        <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">#VZ2101</a></td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <img src="assets/images/users/avatar-10.jpg" alt="" class="avatar-xxs rounded-circle image_src object-fit-cover">
-                                                </div>
-                                                <div class="flex-grow-1 ms-2 name">Tonya Noble</div>
-                                            </div>
-                                        </td>
-                                        <td class="company_name">Force Medicines</td>
-                                        <td class="leads_score">147</td>
-                                        <td class="phone">580-464-4694</td>
-                                        <td class="location">Los Angeles, USA</td>
-                                        <td class="tags">
-                                            <span class="badge bg-primary-subtle text-primary">Lead</span>
-                                            <span class="badge bg-primary-subtle text-primary">Partner</span>
-                                        </td>
-                                        <td class="date">07 Apr, 2021</td>
+                                        <td class="customer_number"><a href="javascript:void(0);" class="fw-medium link-primary">#C{{ $customer->id }}</a></td>
+                                        <td class="name">{{$customer->name}}</td>
+                                        <td class="country">{{$customer->country}}</td>
+                                        <td class="email">{{$customer->email}}</td>
+                                        <td class="phone">{{$customer->phone}}</td>
+                                        <td class="status">{{ $customer->status->label() }}</td>
+                                        <td class="created_at">{{ $customer->created_at }}</td>
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
                                                 <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Call">
@@ -135,6 +249,15 @@
                                             </ul>
                                         </td>
                                     </tr>
+                                    @empty
+                                    <div class="noresult" style="display: none">
+                                        <div class="text-center">
+                                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                            <h5 class="mt-2">Sorry! No Result Found</h5>
+                                            <p class="text-muted mb-0">We've searched more than 150+ leads We did not find any leads for you search.</p>
+                                        </div>
+                                    </div>
+                                    @endforelse
                                 </tbody>
                             </table>
                             <div class="noresult" style="display: none">
@@ -184,7 +307,7 @@
                                                         </div>
                                                         <div class="avatar-lg p-1">
                                                             <div class="avatar-title bg-light rounded-circle">
-                                                                <img src="assets/images/users/user-dummy-img.jpg" id="lead-img" class="avatar-md rounded-circle object-fit-cover" />
+                                                                <img src="{{asset('backend/assets/images/users/user-dummy-img.jpg')}}" id="lead-img" class="avatar-md rounded-circle object-fit-cover" />
                                                             </div>
                                                         </div>
                                                     </div>

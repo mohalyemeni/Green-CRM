@@ -59,7 +59,7 @@
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item"><a href="{{route('admin.index_route')}}">الرئيسية</a></li>
-                                        <li class="breadcrumb-item active">@yield('title')</li>
+                                        <li class="breadcrumb-item active">{{$title}}</li>
                                     </ol>
                                 </div>
 
@@ -122,9 +122,6 @@
 
     <!--list pagination js-->
     <script src="{{asset('backend/assets/libs/list.pagination.js/list.pagination.min.js')}}"></script>
-
-    <!-- crm leads init -->
-    <script src="{{asset('backend/assets/js/pages/crm-leads.init.js')}}"></script>
 
     <!-- Sweet Alerts js -->
     <script src="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>

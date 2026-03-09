@@ -15,14 +15,15 @@ new #[Title('Customers')] class extends Component
     public $search = '';
     public $country = '';
     public $status = '';
-    public $sortField = 'first_name';
-    public $sortDirection = 'asc';
+    public $created_at = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
 
     // Pagination
     public $perPage = 10;
 
     // Selected customers for bulk actions
-    public $selected = [];
+    public $selectedIds = [];
     public $selectAll = false;
 
     // Modal state
@@ -31,11 +32,11 @@ new #[Title('Customers')] class extends Component
 
     // Query string for URL persistence
     protected $queryString = [
-        'search' => ['except' => ''],
-        'country' => ['except' => ''],
-        'status' => ['except' => ''],
-        'sortField' => ['except' => 'first_name'],
-        'sortDirection' => ['except' => 'asc'],
+        'search'        => ['except' => ''],
+        'country'       => ['except' => ''],
+        'status'        => ['except' => ''],
+        'sortField'     => ['except' => 'created_at'],
+        'sortDirection' => ['except' => 'desc'],
     ];
 
     #[Computed]
@@ -50,10 +51,10 @@ new #[Title('Customers')] class extends Component
             ->with(['creator', 'editor'])
 
             // 3. البحث الذكي (يحتوي على ترتيب داخلي حسب الأهمية)
-            ->when($this->search, fn($q) => $q->search($this->search))
+            ->when($this->search, fn($q) => $q->search('%' . $this->search . '%'))
 
             // 4. الفلترة حسب الدولة
-            ->when($this->country, fn($q) => $q->where('country', $this->country))
+            ->when($this->country, fn($q) => $q->where('country', 'LIKE', '%' . $this->country . '%'))
 
             // 5. معالجة الحالة (1 = نشط، 2 = غير نشط)
             ->when($this->status, function ($q) {
@@ -61,8 +62,8 @@ new #[Title('Customers')] class extends Component
                 return $q->where('status', $this->status == 1);
             })
 
-            // 6. الترتيب: يطبق فقط في حال عدم وجود بحث للحفاظ على دقة نتائج البحث
-            ->when(!$this->search, fn($q) => $q->orderBy($sortField, $this->sortDirection))
+            // 6. الترتيب: يُطبَّق دائماً (مع الحماية الأمنية)
+            ->orderBy($sortField, $this->sortDirection)
 
             // 7. الترقيم
             ->paginate($this->perPage);
@@ -129,16 +130,16 @@ new #[Title('Customers')] class extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = $this->customers->pluck('id')->map(fn($id) => (string)$id)->toArray();
+            $this->selectedIds = $this->customers->pluck('id')->map(fn($id) => (string)$id)->toArray();
         } else {
-            $this->selected = [];
+            $this->selectedIds = [];
         }
     }
 
-    public function bulkDelete()
+    public function deleteMultiple()
     {
-        Customer::whereIn('id', $this->selected)->delete();
-        $this->selected = [];
+        Customer::whereIn('id', $this->selectedIds)->delete();
+        $this->selectedIds = [];
         $this->selectAll = false;
 
         session()->flash('message', 'Selected customers deleted successfully.');
