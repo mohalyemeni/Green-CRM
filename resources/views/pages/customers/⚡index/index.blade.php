@@ -90,9 +90,9 @@
                 <div class="card-header border-0">
 
                     <div class="row g-4 align-items-center">
-                        <div class="col-sm-3">
-                            <h5 class="card-title mb-0">بيانات العملاء</h5>
-                            <p><small>عرض جميع بيانات العملاء</small></p>
+                        <div class="col-sm-10">
+                            <h5 class="card-title mb-0">إدارة بيانات العملاء</h5>
+                            <p><small>عرض وإدارة جميع بيانات العملاء المسجلين في النظام.</small></p>
                         </div>
 
                         <div class="col-sm-auto ms-auto">
@@ -203,7 +203,7 @@
                                             </div>
                                         </th>
                                         <th>انشئ في</th>
-                                        <th>Action</th>
+                                        <th>الإجراءات</th>
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -222,7 +222,7 @@
                                         <td class="email">{{$customer->email}}</td>
                                         <td class="phone">{{$customer->phone}}</td>
                                         <td class="status">{{ $customer->status->label() }}</td>
-                                        <td class="created_at">{{ $customer->created_at }}</td>
+                                        <td class="created_at">{{ $customer->created_at->diffForHumans() }}</td>
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
                                                 <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Call">
@@ -239,7 +239,7 @@
                                                     <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
                                                 </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                    <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                    <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal" wire:click="editCustomer({{ $customer->id }})"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
                                                 </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
                                                     <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
@@ -268,150 +268,293 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <div class="pagination-wrap hstack gap-2">
-                                <a class="page-item pagination-prev disabled" href="#">
-                                    Previous
-                                </a>
-                                <ul class="pagination listjs-pagination mb-0"></ul>
-                                <a class="page-item pagination-next" href="#">
-                                    Next
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                        {{$this->customers->links('livewire::custom-pagination-links')}}
 
-                    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-light p-3">
-                                    <h5 class="modal-title" id="exampleModalLabel"></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
-                                </div>
-                                <form class="tablelist-form" autocomplete="off">
-                                    <div class="modal-body">
-                                        <input type="hidden" id="id-field" />
-                                        <div class="row g-3">
-                                            <div class="col-lg-12">
-                                                <div class="text-center">
-                                                    <div class="position-relative d-inline-block">
-                                                        <div class="position-absolute bottom-0 end-0">
-                                                            <label for="lead-image-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Image">
-                                                                <div class="avatar-xs cursor-pointer">
-                                                                    <div class="avatar-title bg-light border rounded-circle text-muted">
-                                                                        <i class="ri-image-fill"></i>
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <input class="form-control d-none" value="" id="lead-image-input" type="file" accept="image/png, image/gif, image/jpeg">
-                                                        </div>
-                                                        <div class="avatar-lg p-1">
-                                                            <div class="avatar-title bg-light rounded-circle">
-                                                                <img src="{{asset('backend/assets/images/users/user-dummy-img.jpg')}}" id="lead-img" class="avatar-md rounded-circle object-fit-cover" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <h5 class="fs-13 mt-3">Lead Image</h5>
+                        <div wire:ignore.self class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-light p-3">
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            @if($form->customer)
+                                            <i class="ri-edit-line me-2 text-warning"></i> تعديل بيانات العميل
+                                            @else
+                                            <i class="ri-user-add-line me-2 text-success"></i> إضافة عميل جديد
+                                            @endif
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="cancel"></button>
+                                    </div>
+                                    <form wire:submit.prevent="submitCustomer" autocomplete="off">
+                                        <div class="modal-body">
+                                            <div class="row g-3">
+
+                                                {{-- ===== قسم: البيانات الأساسية ===== --}}
+                                                <div class="col-12">
+                                                    <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
+                                                        <i class="ri-user-line me-1"></i> البيانات الأساسية
+                                                    </h6>
                                                 </div>
-                                                <div>
-                                                    <label for="leadname-field" class="form-label">Name</label>
-                                                    <input type="text" id="leadname-field" class="form-control" placeholder="Enter Name" required />
+
+                                                {{-- الاسم --}}
+                                                <div class="col-lg-6">
+                                                    <label for="form-name" class="form-label">اسم العميل <span class="text-danger">*</span></label>
+                                                    <input type="text" id="form-name" class="form-control @error('form.name') is-invalid @enderror"
+                                                        wire:model="form.name"
+                                                        placeholder="أدخل اسم العميل كاملاً" />
+                                                    @error('form.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-12">
-                                                <div>
-                                                    <label for="company_name-field" class="form-label">Company Name</label>
-                                                    <input type="text" id="company_name-field" class="form-control" placeholder="Enter company name" required />
+
+                                                {{-- الهوية الوطنية --}}
+                                                <div class="col-lg-6">
+                                                    <label for="form-national_id" class="form-label">الهوية الوطنية</label>
+                                                    <input type="text" id="form-national_id" class="form-control @error('form.national_id') is-invalid @enderror"
+                                                        wire:model="form.national_id"
+                                                        placeholder="أدخل رقم الهوية الوطنية" />
+                                                    @error('form.national_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-6">
-                                                <div>
-                                                    <label for="leads_score-field" class="form-label">Leads Score</label>
-                                                    <input type="text" id="leads_score-field" class="form-control" placeholder="Enter lead score" required />
+
+                                                {{-- العمر --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-age" class="form-label">العمر</label>
+                                                    <input type="number" id="form-age" class="form-control @error('form.age') is-invalid @enderror"
+                                                        wire:model="form.age"
+                                                        min="1" max="120" placeholder="العمر" />
+                                                    @error('form.age') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-6">
-                                                <div>
-                                                    <label for="phone-field" class="form-label">Phone</label>
-                                                    <input type="text" id="phone-field" class="form-control" placeholder="Enter phone no" required />
-                                                </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-12">
-                                                <div>
-                                                    <label for="location-field" class="form-label">Location</label>
-                                                    <input type="text" id="location-field" class="form-control" placeholder="Enter location" required />
-                                                </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-12">
-                                                <div>
-                                                    <label for="taginput-choices" class="form-label">Tags</label>
-                                                    <select class="form-control" name="taginput-choices" id="taginput-choices" multiple>
-                                                        <option value="Lead">Lead</option>
-                                                        <option value="Partner">Partner</option>
-                                                        <option value="Exiting">Exiting</option>
-                                                        <option value="Long-term">Long-term</option>
+
+                                                {{-- الجنس --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-gender" class="form-label">الجنس</label>
+                                                    <select id="form-gender" class="form-select @error('form.gender') is-invalid @enderror"
+                                                        wire:model="form.gender">
+                                                        <option value="">-- اختر الجنس --</option>
+                                                        <option value="1">ذكر</option>
+                                                        <option value="2">أنثى</option>
                                                     </select>
+                                                    @error('form.gender') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div>
-                                                    <label for="date-field" class="form-label">Created Date</label>
-                                                    <input type="date" id="date-field" class="form-control" data-provider="flatpickr" data-date-format="d M, Y" placeholder="Select Date" required />
+
+                                                {{-- الحالة --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-status" class="form-label">الحالة <span class="text-danger">*</span></label>
+                                                    <select id="form-status" class="form-select @error('form.status') is-invalid @enderror"
+                                                        wire:model="form.status">
+                                                        <option value="1">مفعل</option>
+                                                        <option value="2">غير مفعل</option>
+                                                        <option value="3">موقوف مؤقتاً</option>
+                                                    </select>
+                                                    @error('form.status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 </div>
+
+                                                {{-- ===== قسم: بيانات التواصل ===== --}}
+                                                <div class="col-12 mt-2">
+                                                    <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
+                                                        <i class="ri-phone-line me-1"></i> بيانات التواصل
+                                                    </h6>
+                                                </div>
+
+                                                {{-- الجوال --}}
+                                                <div class="col-lg-6">
+                                                    <label for="form-mobile" class="form-label">رقم الجوال</label>
+                                                    <input type="tel" id="form-mobile" class="form-control @error('form.mobile') is-invalid @enderror"
+                                                        wire:model="form.mobile"
+                                                        placeholder="05XXXXXXXX" />
+                                                    @error('form.mobile') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- البريد الإلكتروني --}}
+                                                <div class="col-lg-6">
+                                                    <label for="form-email" class="form-label">البريد الإلكتروني</label>
+                                                    <input type="email" id="form-email" class="form-control @error('form.email') is-invalid @enderror"
+                                                        wire:model="form.email"
+                                                        placeholder="example@domain.com" />
+                                                    @error('form.email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- ===== قسم: بيانات العنوان ===== --}}
+                                                <div class="col-12 mt-2">
+                                                    <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
+                                                        <i class="ri-map-pin-line me-1"></i> بيانات العنوان
+                                                    </h6>
+                                                </div>
+
+                                                {{-- العنوان العام --}}
+                                                <div class="col-12">
+                                                    <label for="form-general_address" class="form-label">العنوان العام</label>
+                                                    <input type="text" id="form-general_address" class="form-control @error('form.general_address') is-invalid @enderror"
+                                                        wire:model="form.general_address"
+                                                        placeholder="أدخل العنوان العام" />
+                                                    @error('form.general_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- رقم المبنى --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-building_number" class="form-label">رقم المبنى</label>
+                                                    <input type="text" id="form-building_number" class="form-control @error('form.building_number') is-invalid @enderror"
+                                                        wire:model="form.building_number"
+                                                        placeholder="رقم المبنى" />
+                                                    @error('form.building_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- اسم الشارع --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-street_name" class="form-label">اسم الشارع</label>
+                                                    <input type="text" id="form-street_name" class="form-control @error('form.street_name') is-invalid @enderror"
+                                                        wire:model="form.street_name"
+                                                        placeholder="اسم الشارع" />
+                                                    @error('form.street_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- الحي --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-district" class="form-label">الحي</label>
+                                                    <input type="text" id="form-district" class="form-control @error('form.district') is-invalid @enderror"
+                                                        wire:model="form.district"
+                                                        placeholder="اسم الحي" />
+                                                    @error('form.district') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- المدينة --}}
+                                                <div class="col-lg-6">
+                                                    <label for="form-city" class="form-label">المدينة</label>
+                                                    <input type="text" id="form-city" class="form-control @error('form.city') is-invalid @enderror"
+                                                        wire:model="form.city"
+                                                        placeholder="المدينة" />
+                                                    @error('form.city') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- الدولة --}}
+                                                <div class="col-lg-6">
+                                                    <label for="form-country" class="form-label">الدولة</label>
+                                                    <input type="text" id="form-country" class="form-control @error('form.country') is-invalid @enderror"
+                                                        wire:model="form.country"
+                                                        placeholder="الدولة" />
+                                                    @error('form.country') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- ===== قسم: البيانات المالية والتجارية ===== --}}
+                                                <div class="col-12 mt-2">
+                                                    <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
+                                                        <i class="ri-money-dollar-circle-line me-1"></i> البيانات المالية
+                                                    </h6>
+                                                </div>
+
+                                                {{-- الرقم الضريبي --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-tax_number" class="form-label">الرقم الضريبي</label>
+                                                    <input type="text" id="form-tax_number" class="form-control @error('form.tax_number') is-invalid @enderror"
+                                                        wire:model="form.tax_number"
+                                                        placeholder="الرقم الضريبي" />
+                                                    @error('form.tax_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- طريقة التعامل --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-dealing_method" class="form-label">طريقة التعامل</label>
+                                                    <select id="form-dealing_method" class="form-select @error('form.dealing_method') is-invalid @enderror"
+                                                        wire:model="form.dealing_method">
+                                                        <option value="">-- اختر الطريقة --</option>
+                                                        <option value="cash">كاش</option>
+                                                        <option value="credit">آجل</option>
+                                                    </select>
+                                                    @error('form.dealing_method') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- حد الدين --}}
+                                                <div class="col-lg-4">
+                                                    <label for="form-credit_limit" class="form-label">حد الدين</label>
+                                                    <div class="input-group">
+                                                        <input type="number" id="form-credit_limit" class="form-control @error('form.credit_limit') is-invalid @enderror"
+                                                            wire:model="form.credit_limit"
+                                                            min="0" step="0.01" placeholder="0.00" />
+                                                        <span class="input-group-text">ر.س</span>
+                                                    </div>
+                                                    @error('form.credit_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                                {{-- ===== الملاحظات ===== --}}
+                                                <div class="col-12 mt-1">
+                                                    <label for="form-notes" class="form-label">ملاحظات</label>
+                                                    <textarea id="form-notes" class="form-control @error('form.notes') is-invalid @enderror"
+                                                        wire:model="form.notes"
+                                                        rows="3" placeholder="أي ملاحظات إضافية على العميل..."></textarea>
+                                                    @error('form.notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                </div>
+
+                                            </div>{{-- end row --}}
+                                        </div>{{-- end modal-body --}}
+
+                                        <div class="modal-footer">
+                                            <div class="hstack gap-2 justify-content-end">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="cancel">
+                                                    <i class="ri-close-line me-1"></i> إلغاء
+                                                </button>
+                                                <button type="submit" class="btn btn-success" wire:loading.attr="disabled">
+                                                    <span wire:loading.remove wire:target="saveCustomer,updateCustomer">
+                                                        @if($form->customer)
+                                                        <i class="ri-save-line me-1"></i> تحديث البيانات
+                                                        @else
+                                                        <i class="ri-save-line me-1"></i> حفظ العميل
+                                                        @endif
+                                                    </span>
+                                                    <span wire:loading wire:target="saveCustomer,updateCustomer">
+                                                        <span class="spinner-border spinner-border-sm me-1" role="status"></span> جاري الحفظ...
+                                                    </span>
+                                                </button>
                                             </div>
-                                            <!--end col-->
                                         </div>
-                                        <!--end row-->
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="hstack gap-2 justify-content-end">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-success" id="add-btn">Add leads</button>
-                                            <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--end modal-->
+                        <!--end modal-->
 
-                    <!-- Modal -->
-                    <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1" aria-labelledby="deleteRecordLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btn-close"></button>
-                                </div>
-                                <div class="modal-body p-5 text-center">
-                                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#405189,secondary:#f06548" style="width:90px;height:90px"></lord-icon>
-                                    <div class="mt-4 text-center">
-                                        <h4 class="fs-semibold">You are about to delete a lead ?</h4>
-                                        <p class="text-muted fs-14 mb-4 pt-1">Deleting your lead will remove all of your information from our database.</p>
-                                        <div class="hstack gap-2 justify-content-center remove">
+                        <!-- Modal -->
+                        <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1" aria-labelledby="deleteRecordLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btn-close"></button>
+                                    </div>
+                                    <div class="modal-body p-5 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#405189,secondary:#f06548" style="width:90px;height:90px"></lord-icon>
+                                        <div class="mt-4 text-center">
+                                            <h4 class="fs-semibold">You are about to delete a lead ?</h4>
+                                            <p class="text-muted fs-14 mb-4 pt-1">Deleting your lead will remove all of your information from our database.</p>
+                                            <div class="hstack gap-2 justify-content-center remove">
 
-                                            <button class="btn btn-link link-success fw-medium text-decoration-none material-shadow-none" id="deleteRecord-close" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Close</button>
-                                            <button class="btn btn-danger" id="delete-record">Yes, Delete It!!</button>
+                                                <button class="btn btn-link link-success fw-medium text-decoration-none material-shadow-none" id="deleteRecord-close" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Close</button>
+                                                <button class="btn btn-danger" id="delete-record">Yes, Delete It!!</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!--end modal -->
+
+
+                        @include('partials.backend.customers.offcanvas')
+
                     </div>
-                    <!--end modal -->
-
-
-                    @include('partials.backend.customers.offcanvas')
-
                 </div>
-            </div>
 
+            </div>
+            <!--end col-->
         </div>
-        <!--end col-->
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('livewire:init', () => {
+        const getModal = () => {
+            const el = document.getElementById('showModal');
+            return el ? (bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el)) : null;
+        };
+
+        Livewire.on('close-modal', () => {
+            getModal()?.hide();
+        });
+    });
+</script>
+@endpush

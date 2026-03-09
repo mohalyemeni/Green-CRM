@@ -1,16 +1,19 @@
 <?php
 
-
+use App\Livewire\Forms\CustomerForm;
 use App\Models\Customer;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Computed;
+use Livewire\WithoutUrlPagination;
 
 new #[Title('Customers')] class extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination, WithFileUploads, WithoutUrlPagination;
+
+    protected $paginationTheme = 'bootstrap';
     // Filters
     public $search = '';
     public $country = '';
@@ -29,6 +32,9 @@ new #[Title('Customers')] class extends Component
     // Modal state
     public $showDeleteModal = false;
     public $customerToDelete = null;
+
+    // Form Object للتحقق والحفظ والتعديل
+    public CustomerForm $form;
 
     // Query string for URL persistence
     protected $queryString = [
@@ -145,13 +151,45 @@ new #[Title('Customers')] class extends Component
         session()->flash('message', 'Selected customers deleted successfully.');
     }
 
-    private function getFilteredCustomers()
+    // ===== إضافة عميل جديد =====
+    public function saveCustomer(): void
     {
-        return Customer::query()
-            ->when($this->search, fn($q) => $q->search($this->search))
-            ->when($this->department, fn($q) => $q->where('department', $this->department))
-            ->when($this->status, fn($q) => $q->where('status', $this->status))
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->get();
+        $this->form->store();
+        $this->dispatch('close-modal');
+        session()->flash('success', 'تم إضافة العميل بنجاح.');
+        unset($this->customers);
+    }
+
+    // ===== تحضير فورم التعديل =====
+    public function editCustomer(Customer $customer): void
+    {
+        $this->form->setCustomer($customer);
+        $this->dispatch('open-modal');
+    }
+
+    // ===== تحديث عميل موجود =====
+    public function updateCustomer(): void
+    {
+        $this->form->update();
+        $this->dispatch('close-modal');
+        session()->flash('success', 'تم تحديث بيانات العميل بنجاح.');
+        unset($this->customers);
+    }
+
+    // ===== دالة موحّدة (إضافة أو تعديل) — مستخدَمة في wire:submit =====
+    public function submitCustomer(): void
+    {
+        if ($this->form->customer) {
+            $this->updateCustomer();
+        } else {
+            $this->saveCustomer();
+        }
+    }
+
+    // ===== مسح الفورم عند الإلغاء أو إغلاق المودل =====
+    public function cancel(): void
+    {
+        $this->form->reset();
+        $this->resetValidation();
     }
 };
