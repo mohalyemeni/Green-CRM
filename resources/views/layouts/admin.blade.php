@@ -13,6 +13,8 @@
 
     <!-- Sweet Alert css-->
     <link href="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- Sweet Alert css-->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <!-- Layout config Js -->
     <script src="{{asset('backend/assets/js/layout.js')}}"></script>
@@ -25,6 +27,7 @@
     <!-- custom Css-->
     <link href="{{asset('backend/assets/css/custom-rtl.min.css')}}" rel="stylesheet" type="text/css" />
     @yield('style')
+    @stack('styles')
 </head>
 
 <body>
@@ -117,6 +120,8 @@
     <script src="{{asset('backend/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
     <script src="{{asset('backend/assets/js/plugins.js')}}"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <!-- list.js min js -->
     <script src="{{asset('backend/assets/libs/list.js/list.min.js')}}"></script>
 
@@ -126,9 +131,13 @@
     <!-- Sweet Alerts js -->
     <script src="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
+    <!-- jQuery (required for Toastr) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <!-- App js -->
     <script src="{{asset('backend/assets/js/app.js')}}"></script>
     @yield('script')
+    @stack('scripts')
 </body>
 
 </html>

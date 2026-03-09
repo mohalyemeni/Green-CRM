@@ -128,8 +128,8 @@ new #[Title('Customers')] class extends Component
             Customer::find($this->customerToDelete)->delete();
             $this->showDeleteModal = false;
             $this->customerToDelete = null;
-
-            session()->flash('message', 'Customer deleted successfully.');
+            $this->dispatch('notify', type: 'warning', message: 'تم حذف العميل بنجاح.');
+            unset($this->customers);
         }
     }
 
@@ -147,8 +147,8 @@ new #[Title('Customers')] class extends Component
         Customer::whereIn('id', $this->selectedIds)->delete();
         $this->selectedIds = [];
         $this->selectAll = false;
-
-        session()->flash('message', 'Selected customers deleted successfully.');
+        $this->dispatch('notify', type: 'warning', message: 'تم حذف العملاء المحددين بنجاح.');
+        unset($this->customers);
     }
 
     // ===== إضافة عميل جديد =====
@@ -156,7 +156,7 @@ new #[Title('Customers')] class extends Component
     {
         $this->form->store();
         $this->dispatch('close-modal');
-        session()->flash('success', 'تم إضافة العميل بنجاح.');
+        $this->dispatch('notify', type: 'success', message: 'تم إضافة العميل بنجاح.');
         unset($this->customers);
     }
 
@@ -172,7 +172,7 @@ new #[Title('Customers')] class extends Component
     {
         $this->form->update();
         $this->dispatch('close-modal');
-        session()->flash('success', 'تم تحديث بيانات العميل بنجاح.');
+        $this->dispatch('notify', type: 'info', message: 'تم تحديث بيانات العميل بنجاح.');
         unset($this->customers);
     }
 

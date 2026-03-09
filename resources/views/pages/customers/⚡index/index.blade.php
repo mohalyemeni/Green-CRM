@@ -3,6 +3,7 @@
     selectedIds: @entangle('selectedIds'),
     sortField: @entangle('sortField'),
     sortDirection: @entangle('sortDirection'),
+    showModal: false,
     sortBy(field) {
         $wire.sortBy(field);
     },
@@ -14,7 +15,9 @@
             this.selectedIds = [];
         }
     }
-}">
+}"
+    x-on:open-customer-modal.window="showModal = true"
+    x-on:close-customer-modal.window="showModal = false; $wire.cancel()">
     <!-- Start right Content here -->
     <!-- ============================================================== -->
     <div class="row">
@@ -61,7 +64,7 @@
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-info" data-bs-toggle="offcanvas" href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i> Fliters</button>
-                                    <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn" data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Add Leads</button>
+                                    <button type="button" class="btn btn-success add-btn" @click="$wire.cancel(); showModal = true" id="create-btn"><i class="ri-add-line align-bottom me-1"></i> إضافة عميل</button>
                                     <span class="dropdown">
                                         <button class="btn btn-soft-info btn-icon fs-14" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="ri-settings-4-line"></i>
@@ -239,7 +242,7 @@
                                                     <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
                                                 </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                    <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal" wire:click="editCustomer({{ $customer->id }})"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                    <a class="edit-item-btn" href="javascript:void(0);" @click="$wire.editCustomer({{ $customer->id }}).then(() => showModal = true)"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
                                                 </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
                                                     <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
@@ -270,7 +273,20 @@
                         </div>
                         {{$this->customers->links('livewire::custom-pagination-links')}}
 
-                        <div wire:ignore.self class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div wire:ignore.self
+                            class="modal fade"
+                            id="showModal"
+                            tabindex="-1"
+                            aria-labelledby="exampleModalLabel"
+                            :class="{ 'show d-block': showModal }"
+                            :aria-hidden="!showModal"
+                            x-show="showModal"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header bg-light p-3">
@@ -281,7 +297,7 @@
                                             <i class="ri-user-add-line me-2 text-success"></i> إضافة عميل جديد
                                             @endif
                                         </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="cancel"></button>
+                                        <button type="button" class="btn-close" aria-label="Close" @click="showModal = false; $wire.cancel()"></button>
                                     </div>
                                     <form wire:submit.prevent="submitCustomer" autocomplete="off">
                                         <div class="modal-body">
@@ -485,7 +501,7 @@
 
                                         <div class="modal-footer">
                                             <div class="hstack gap-2 justify-content-end">
-                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" wire:click="cancel">
+                                                <button type="button" class="btn btn-light" @click="showModal = false; $wire.cancel()">
                                                     <i class="ri-close-line me-1"></i> إلغاء
                                                 </button>
                                                 <button type="submit" class="btn btn-success" wire:loading.attr="disabled">
@@ -542,18 +558,47 @@
             <!--end col-->
         </div>
     </div>
+
+    {{-- Modal Backdrop --}}
+    <div class="modal-backdrop fade show" x-show="showModal" style="display:none;"></div>
 </div>
 
 @push('scripts')
 <script>
-    document.addEventListener('livewire:init', () => {
-        const getModal = () => {
-            const el = document.getElementById('showModal');
-            return el ? (bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el)) : null;
-        };
+    // SweetAlert2 Toast configuration
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
 
+    document.addEventListener('livewire:init', () => {
+        // SweetAlert2 Toast notifications
+        Livewire.on('notify', ({
+            type,
+            message
+        }) => {
+            const iconMap = {
+                success: 'success',
+                info: 'info',
+                warning: 'warning',
+                error: 'error',
+            };
+            Toast.fire({
+                icon: iconMap[type] ?? 'info',
+                title: message,
+            });
+        });
+
+        // Close modal when Livewire dispatches close-modal
         Livewire.on('close-modal', () => {
-            getModal()?.hide();
+            window.dispatchEvent(new CustomEvent('close-customer-modal'));
         });
     });
 </script>
