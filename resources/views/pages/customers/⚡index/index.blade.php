@@ -1,4 +1,3 @@
-@section('title', 'بيانات العملاء')
 <div x-data="{
     selectedIds: @entangle('selectedIds'),
     sortField: @entangle('sortField'),
@@ -129,7 +128,7 @@
                                                     :checked="selectedIds.length > 0 && selectedIds.length === document.querySelectorAll('input[name=chk_child]').length">
                                             </div>
                                         </th>
-
+                                        <th>الإجراءات</th>
                                         <th @click="sortBy('customer_number')" style="cursor: pointer; user-select: none;">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span>المعرف</span>
@@ -209,7 +208,7 @@
                                             </div>
                                         </th>
                                         <th>انشئ في</th>
-                                        <th>الإجراءات</th>
+
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -222,28 +221,8 @@
                                                     x-model="selectedIds">
                                             </div>
                                         </th>
-                                        <td class="customer_number"><a href="javascript:void(0);" class="fw-medium link-primary">#C{{ $customer->id }}</a></td>
-                                        <td class="name">{{$customer->name}}</td>
-                                        <td class="country">{{$customer->country}}</td>
-                                        <td class="email">{{$customer->email}}</td>
-                                        <td class="phone">{{$customer->phone}}</td>
-                                        <td class="status">{{ $customer->status->label() }}</td>
-                                        <td class="created_at">{{ $customer->created_at->diffForHumans() }}</td>
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
-                                                <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Call">
-                                                    <a href="javascript:void(0);" class="text-muted d-inline-block">
-                                                        <i class="ri-phone-line fs-16"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Message">
-                                                    <a href="javascript:void(0);" class="text-muted d-inline-block">
-                                                        <i class="ri-question-answer-line fs-16"></i>
-                                                    </a>
-                                                </li>
-                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                    <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
-                                                </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
                                                     <a class="edit-item-btn" href="javascript:void(0);" @click="$wire.editCustomer({{ $customer->id }}).then(() => showModal = true)"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
                                                 </li>
@@ -252,8 +231,27 @@
                                                         <i class="ri-delete-bin-fill align-bottom text-muted"></i>
                                                     </a>
                                                 </li>
+                                                <li class="list-inline-item">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="ri-more-fill align-middle"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                            <li><a class="dropdown-item view-item-btn" href="javascript:void(0);"><i class="ri-eye-fill align-bottom me-2 text-muted"></i>عرض</a></li>
+                                                            <li><a class="dropdown-item edit-item-btn" href="#showModal" data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> طباعة</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
                                             </ul>
                                         </td>
+                                        <td class="customer_number"><a href="javascript:void(0);" class="fw-medium link-primary">#C{{ $customer->id }}</a></td>
+                                        <td class="name">{{$customer->name}}</td>
+                                        <td class="country">{{$customer->country}}</td>
+                                        <td class="email">{{$customer->email}}</td>
+                                        <td class="phone">{{$customer->phone}}</td>
+                                        <td class="status">{{ $customer->status->label() }}</td>
+                                        <td class="created_at">{{ $customer->created_at->diffForHumans() }}</td>
+
                                     </tr>
                                     @empty
                                     <div class="noresult" style="display: none">

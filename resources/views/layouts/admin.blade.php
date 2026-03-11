@@ -13,8 +13,8 @@
 
     <!-- Sweet Alert css-->
     <link href="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
-    <!-- Sweet Alert css-->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- toastr Alert css-->
+    <link href="{{asset('backend/assets/libs/toastr/build/toastr.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Layout config Js -->
     <script src="{{asset('backend/assets/js/layout.js')}}"></script>
@@ -58,7 +58,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
-                                <h4 class="mb-sm-0">@yield('title')</h4>
+                                <h4 class="mb-sm-0">{{$title ?? ''}} @yield('title')</h4>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item"><a href="{{route('admin.index_route')}}">الرئيسية</a></li>
@@ -120,8 +120,6 @@
     <script src="{{asset('backend/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
     <script src="{{asset('backend/assets/js/plugins.js')}}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
     <!-- list.js min js -->
     <script src="{{asset('backend/assets/libs/list.js/list.min.js')}}"></script>
 
@@ -131,11 +129,15 @@
     <!-- Sweet Alerts js -->
     <script src="{{asset('backend/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
+    <!-- Toastr js -->
+    <script src="{{asset('backend/assets/libs/toastr/build/toastr.min.js')}}"></script>
+
     <!-- jQuery (required for Toastr) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- App js -->
     <script src="{{asset('backend/assets/js/app.js')}}"></script>
+    <script src="{{asset('backend/assets/js/custom.js')}}"></script>
     @yield('script')
     @stack('scripts')
 </body>

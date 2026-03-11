@@ -9,7 +9,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Computed;
 use Livewire\WithoutUrlPagination;
 
-new #[Title('Customers')] class extends Component
+new #[Title('بيانات العملاء')] class extends Component
 {
     use WithPagination, WithFileUploads, WithoutUrlPagination;
 

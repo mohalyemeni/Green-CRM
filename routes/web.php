@@ -44,6 +44,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('category', CategoryController::class);
 });
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true, 'register' => false]);
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
