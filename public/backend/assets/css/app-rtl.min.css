@@ -2587,7 +2587,7 @@ h6, .h6 { font-size: 0.9375rem; font-weight: 600; line-height: 1.5; }
 p { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1rem; }
 small, .small { font-size: 0.85em; } 
 .text-muted { font-size: 0.9em; }
-.btn { font-size: 0.9375rem; font-weight: 500; }
+.btn { font-size: 0.9375rem; font-weight: 600; }
 .form-control, .form-select { font-size: 0.9375rem; }
 .badge { font-size: 0.75em; padding: 0.35em 0.65em; }
 .table th, .table td { font-size: 0.9375rem; vertical-align: middle; }
