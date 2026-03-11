@@ -248,8 +248,8 @@
                                         <td class="name">{{$customer->name}}</td>
                                         <td class="country">{{$customer->country}}</td>
                                         <td class="email">{{$customer->email}}</td>
-                                        <td class="phone">{{$customer->phone}}</td>
-                                        <td class="status">{{ $customer->status->label() }}</td>
+                                        <td class="phone">{{$customer->mobile}}</td>
+                                        <td class="status"><span class="badge bg-{{ $customer->status->color() }}-subtle text-{{ $customer->status->color() }} text-uppercase"><small>{{ $customer->status->label() }}</small></span></td>
                                         <td class="created_at">{{ $customer->created_at->diffForHumans() }}</td>
 
                                     </tr>
