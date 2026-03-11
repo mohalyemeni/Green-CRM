@@ -2560,10 +2560,27 @@ File: Main Css File
 [data-theme=vintage] #page-topbar.topbar-shadow {
   background-color: var(--vz-secondary-bg);
 }
-body, * {
-    font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif !important;
-    font-size: 16px !important;
+body {
+    font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
 }
+
+/* Global Typography Overrides for IBM Plex Sans Arabic */
+h1, .h1 { font-size: 2rem; font-weight: 600; line-height: 1.4; }
+h2, .h2 { font-size: 1.75rem; font-weight: 600; line-height: 1.4; }
+h3, .h3 { font-size: 1.5rem; font-weight: 600; line-height: 1.4; }
+h4, .h4 { font-size: 1.25rem; font-weight: 600; line-height: 1.5; }
+h5, .h5 { font-size: 1.0625rem; font-weight: 600; line-height: 1.5; }
+h6, .h6 { font-size: 0.9375rem; font-weight: 600; line-height: 1.5; }
+
+p { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1rem; }
+small, .small { font-size: 0.85em; } 
+.text-muted { font-size: 0.9em; }
+.btn { font-size: 0.9375rem; font-weight: 500; }
+.form-control, .form-select { font-size: 0.9375rem; }
+.badge { font-size: 0.75em; padding: 0.35em 0.65em; }
+.table th, .table td { font-size: 0.9375rem; vertical-align: middle; }
 #page-topbar {
   position: fixed;
   top: 0;

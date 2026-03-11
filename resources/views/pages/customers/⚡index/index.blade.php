@@ -244,7 +244,7 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        <td class="customer_number"><a href="javascript:void(0);" class="fw-medium link-primary">#C{{ $customer->id }}</a></td>
+                                        <td class="customer_number"><a href="javascript:void(0);" class="fw-medium link-primary">{{ $customer->customer_number }}</a></td>
                                         <td class="name">{{$customer->name}}</td>
                                         <td class="country">{{$customer->country}}</td>
                                         <td class="email">{{$customer->email}}</td>
