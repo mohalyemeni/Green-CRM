@@ -2,8 +2,8 @@
     :class="{ 'show': showOffcanvas }"
     :style="showOffcanvas ? 'visibility: visible;' : 'visibility: hidden;'">
     <div class="offcanvas-header bg-light">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">فلاتر البحث</h5>
-        <button type="button" class="btn-close text-reset" @click="showOffcanvas = false" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">تصفية العملاء</h5>
+        <button type="button" class="btn-close text-reset" @click="$wire.resetFilters(); showOffcanvas = false" aria-label="Close"></button>
     </div>
 
     <form wire:submit.prevent="applyFilters" class="d-flex flex-column flex-grow-1 overflow-hidden">
@@ -41,7 +41,7 @@
 
                     this.$refs.select.addEventListener('change', (e) => {
                         let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-                        $wire.set('selectedCountries', selectedValues);
+                        $wire.set('selectedCountries', selectedValues, false);
                     });
                 }
             }">
