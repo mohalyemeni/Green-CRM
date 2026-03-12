@@ -4,6 +4,7 @@
     sortDirection: @entangle('sortDirection'),
     showModal: false,
     showDeleteModal: false,
+    showOffcanvas: false,
     sortBy(field) {
         $wire.sortBy(field);
     },
@@ -19,7 +20,8 @@
     x-on:open-customer-modal.window="showModal = true"
     x-on:close-customer-modal.window="showModal = false; $wire.cancel()"
     x-on:open-delete-modal.window="showDeleteModal = true"
-    x-on:close-delete-modal.window="showDeleteModal = false">
+    x-on:close-delete-modal.window="showDeleteModal = false"
+    x-on:close-offcanvas.window="showOffcanvas = false">
     <!-- Start right Content here -->
     <!-- ============================================================== -->
     <div class="row">
@@ -65,7 +67,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-info" data-bs-toggle="offcanvas" href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i> Fliters</button>
+                                    <button type="button" class="btn btn-info" @click="showOffcanvas = true"><i class="ri-filter-3-line align-bottom me-1"></i> Fliters</button>
                                     <button type="button" class="btn btn-success add-btn" @click="$wire.cancel(); showModal = true" id="create-btn"><i class="ri-add-line align-bottom me-1"></i> إضافة عميل</button>
                                     <span class="dropdown">
                                         <button class="btn btn-soft-info btn-icon fs-14" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -571,6 +573,9 @@
 
         {{-- Delete Confirmation Modal Backdrop --}}
         <div class="modal-backdrop fade show" x-show="showDeleteModal" style="display:none;"></div>
+
+        {{-- Offcanvas Backdrop --}}
+        <div class="offcanvas-backdrop fade show" x-show="showOffcanvas" x-transition.opacity @click="showOffcanvas = false" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"></div>
     </div>
 
     @push('scripts')
@@ -611,16 +616,7 @@
                 window.dispatchEvent(new CustomEvent('close-customer-modal'));
             });
 
-            // Close offcanvas when Livewire dispatches close-offcanvas
-            Livewire.on('close-offcanvas', () => {
-                const offcanvasElement = document.getElementById('offcanvasExample');
-                if (offcanvasElement) {
-                    const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
-                    if (offcanvasInstance) {
-                        offcanvasInstance.hide();
-                    }
-                }
-            });
+            // Close offcanvas is now handled by Alpine `x-on:close-offcanvas.window`
         });
     </script>
     @endpush

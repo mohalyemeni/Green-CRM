@@ -1,7 +1,9 @@
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" wire:ignore.self>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" wire:ignore.self
+    :class="{ 'show': showOffcanvas }"
+    :style="showOffcanvas ? 'visibility: visible;' : 'visibility: hidden;'">
     <div class="offcanvas-header bg-light">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">فلاتر البحث</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close text-reset" @click="showOffcanvas = false" aria-label="Close"></button>
     </div>
 
     <form wire:submit.prevent="applyFilters" class="d-flex flex-column flex-grow-1 overflow-hidden">
