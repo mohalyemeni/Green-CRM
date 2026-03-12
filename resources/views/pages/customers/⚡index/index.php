@@ -16,9 +16,16 @@ new #[Title('بيانات العملاء')] class extends Component
     protected $paginationTheme = 'bootstrap';
     // Filters
     public $search = '';
-    public $country = '';
-    public $status = '';
+    public $country = ''; // For generic simple filter if any
+    public $status = '';  // For generic simple filter if any
     public $created_at = '';
+
+    // Offcanvas filters
+    public $created_from = '';
+    public $created_to = '';
+    public $selectedCountries = [];
+    public $selectedStatuses = [];
+
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 
@@ -41,6 +48,10 @@ new #[Title('بيانات العملاء')] class extends Component
         'search'        => ['except' => ''],
         'country'       => ['except' => ''],
         'status'        => ['except' => ''],
+        'created_from'  => ['except' => ''],
+        'created_to'    => ['except' => ''],
+        'selectedCountries' => ['except' => []],
+        'selectedStatuses'  => ['except' => []],
         'sortField'     => ['except' => 'created_at'],
         'sortDirection' => ['except' => 'desc'],
     ];
@@ -59,14 +70,21 @@ new #[Title('بيانات العملاء')] class extends Component
             // 3. البحث الذكي (يحتوي على ترتيب داخلي حسب الأهمية)
             ->when($this->search, fn($q) => $q->search('%' . $this->search . '%'))
 
-            // 4. الفلترة حسب الدولة
+            // 4. الفلترة حسب الدولة (Single string from past + Array matching from offcanvas)
             ->when($this->country, fn($q) => $q->where('country', 'LIKE', '%' . $this->country . '%'))
+            ->when(!empty($this->selectedCountries), fn($q) => $q->whereIn('country', $this->selectedCountries))
 
-            // 5. معالجة الحالة (1 = نشط، 2 = غير نشط)
-            ->when($this->status, function ($q) {
-                // تحويل القيمة [1, 2] إلى القيمة المنطقية المتوافقة مع is_active
+            // 5. معالجة الحالة (Single status + Multiple from Offcanvas)
+            ->when($this->status !== '', function ($q) {
                 return $q->where('status', $this->status == 1);
             })
+            ->when(!empty($this->selectedStatuses), function ($q) {
+                return $q->whereIn('status', $this->selectedStatuses);
+            })
+
+            // Filter By Dates (Offcanvas)
+            ->when($this->created_from, fn($q) => $q->whereDate('created_at', '>=', $this->created_from))
+            ->when($this->created_to, fn($q) => $q->whereDate('created_at', '<=', $this->created_to))
 
             // 6. الترتيب: يُطبَّق دائماً (مع الحماية الأمنية)
             ->orderBy($sortField, $this->sortDirection)
@@ -110,9 +128,15 @@ new #[Title('بيانات العملاء')] class extends Component
         $this->resetPage();
     }
 
+    public function applyFilters()
+    {
+        $this->resetPage();
+        $this->dispatch('close-offcanvas');
+    }
+
     public function resetFilters()
     {
-        $this->reset(['search', 'country', 'status']);
+        $this->reset(['search', 'country', 'status', 'created_from', 'created_to', 'selectedCountries', 'selectedStatuses']);
         $this->resetPage();
     }
 
