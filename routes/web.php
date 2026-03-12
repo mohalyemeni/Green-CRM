@@ -40,6 +40,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('products', ProductController::class);
         Route::resource('tags', TagController::class);
         Route::livewire('/customers', 'pages::customers.index')->name('customers.index');
+        Route::livewire('/currencies', 'pages::currencies.index')->name('currencies.index');
     });
     Route::resource('category', CategoryController::class);
 });
