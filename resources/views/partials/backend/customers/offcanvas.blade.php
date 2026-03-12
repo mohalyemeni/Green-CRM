@@ -24,9 +24,29 @@
                 </div>
             </div>
 
-            <div class="mb-4" wire:ignore>
+            <div class="mb-4" wire:ignore x-data="{
+                choice: null,
+                init() {
+                    this.choice = new Choices(this.$refs.select, {
+                        searchEnabled: true,
+                        removeItemButton: true,
+                        shouldSort: false,
+                        placeholderValue: 'اختر الدولة',
+                        itemSelectText: ''
+                    });
+
+                    window.addEventListener('filters-reset', () => {
+                        this.choice.removeActiveItems();
+                    });
+
+                    this.$refs.select.addEventListener('change', (e) => {
+                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+                        $wire.set('selectedCountries', selectedValues);
+                    });
+                }
+            }">
                 <label for="country-select" class="form-label text-muted text-uppercase fw-semibold mb-3">الدولة</label>
-                <select class="form-control" data-choices data-choices-multiple-remove="true" wire:model="selectedCountries" id="country-select" multiple>
+                <select x-ref="select" class="form-control" id="country-select" multiple>
                     <option value="">اختر الدولة</option>
                     @foreach($this->countries as $country)
                     @if(!empty($country))

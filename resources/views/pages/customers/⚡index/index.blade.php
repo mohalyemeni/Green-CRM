@@ -617,6 +617,7 @@
             });
 
             // Close offcanvas is now handled by Alpine `x-on:close-offcanvas.window`
+
         });
     </script>
     @endpush

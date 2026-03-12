@@ -138,6 +138,13 @@ new #[Title('بيانات العملاء')] class extends Component
     {
         $this->reset(['search', 'country', 'status', 'created_from', 'created_to', 'selectedCountries', 'selectedStatuses']);
         $this->resetPage();
+        $this->dispatch('filters-reset');
+    }
+
+    public function resetAndCloseFilters()
+    {
+        $this->resetFilters();
+        $this->dispatch('close-offcanvas');
     }
 
     public function confirmDelete($customerId)
