@@ -52,6 +52,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/pipeline-stages', 'pages::pipeline-stages.index')->name('pipeline-stages.index');
         Route::livewire('/lead-statuses', 'pages::lead-statuses.index')->name('lead-statuses.index');
         Route::livewire('/leads', 'pages::leads.index')->name('leads.index');
+        Route::livewire('/opportunities', 'pages::opportunities.index')->name('opportunities.index');
     });
     Route::resource('category', CategoryController::class);
 });

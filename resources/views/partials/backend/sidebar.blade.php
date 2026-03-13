@@ -76,73 +76,83 @@
             <div id="two-column-menu">
             </div>
             <ul class="navbar-nav" id="navbar-nav">
-                <li class="menu-title"><span data-key="t-menu">لوحة التحكم</span></li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.customers.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة العملاء</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.currencies.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة العملات</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.companies.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة الأنشطة التجارية</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.countries.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة الدول</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.branches.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة الفروع</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.customer-groups.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مجموعات العملاء</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.industries.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة الانشطة التجارية</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.lead-sources.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مصادر العملاء</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.opportunity-sources.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مصادر الفرص البيعية</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.lost-reasons.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة أسباب خسارة الصفقات</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.pipeline-stages.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مراحل المبيعات</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.lead-statuses.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة حالات العملاء</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
+
+                <li class="menu-title"><span data-key="t-menu">نظام المبيعات (CRM)</span></li>
+
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('admin.leads.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة العملاء المحتملين</span>
+                        <i class="ri-user-star-line"></i> <span data-key="t-leads">العملاء المحتملين (Leads)</span>
                     </a>
-                </li> <!-- end Dashboard Menu -->
+                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.opportunities.index')}}">
+                        <i class="ri-briefcase-4-line"></i> <span data-key="t-opportunities">الفرص البيعية</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.customers.index')}}">
+                        <i class="ri-team-line"></i> <span data-key="t-customers">العملاء (Customers)</span>
+                    </a>
+                </li>
+
+
+                <li class="menu-title"><span data-key="t-settings">الإعدادات والتهيئة</span></li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarSalesSettings" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSalesSettings">
+                        <i class="ri-settings-4-line"></i> <span data-key="t-sales-settings">إعدادات المبيعات</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarSalesSettings">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{route('admin.pipeline-stages.index')}}" class="nav-link" data-key="t-pipeline-stages">مراحل المبيعات (Pipeline)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.lead-statuses.index')}}" class="nav-link" data-key="t-lead-statuses">حالات العملاء</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.lead-sources.index')}}" class="nav-link" data-key="t-lead-sources">مصادر العملاء</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.opportunity-sources.index')}}" class="nav-link" data-key="t-opp-sources">مصادر الفرص</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.lost-reasons.index')}}" class="nav-link" data-key="t-lost-reasons">أسباب الخسارة</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.customer-groups.index')}}" class="nav-link" data-key="t-customer-groups">مجموعات العملاء</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarMasterData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterData">
+                        <i class="ri-database-2-line"></i> <span data-key="t-master-data">البيانات الأساسية</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarMasterData">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{route('admin.companies.index')}}" class="nav-link" data-key="t-companies">الأنشطة التجارية (الشركات)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.branches.index')}}" class="nav-link" data-key="t-branches">الفروع</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.industries.index')}}" class="nav-link" data-key="t-industries">القطاعات ومجالات العمل</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.currencies.index')}}" class="nav-link" data-key="t-currencies">العملات</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.countries.index')}}" class="nav-link" data-key="t-countries">الدول</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
             </ul>
         </div>
