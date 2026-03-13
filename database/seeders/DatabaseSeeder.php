@@ -21,10 +21,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EntrustSeeder::class);
         $this->call(PermissionSeeder::class);
-         $this->call(CategorySeeder::class);
-         $this->call(ProductSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(ProductSeeder::class);
         $this->call(TagSeeder::class);
         $this->call(ProductsTagsSeeder::class);
         $this->call(ProductsImagesSeeder::class);
+        $this->call(CountrySeeder::class);
     }
 }
