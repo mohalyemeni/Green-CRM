@@ -371,7 +371,6 @@
                                                     <div class="col-lg-6">
                                                         <label for="form-exchange_rate" class="form-label">سعر الصرف <span class="text-danger">*</span></label>
                                                         <input type="number" id="form-exchange_rate" class="form-control @error('form.exchange_rate') is-invalid @enderror"
-                                                            wire:model.debounce.500ms="form.exchange_rate"
                                                             x-model="rate"
                                                             @input="updateEquivalent()"
                                                             step="0.000001" min="0.000001" placeholder="سعر الصرف" />
@@ -381,7 +380,6 @@
                                                     <div class="col-lg-6">
                                                         <label for="form-equivalent" class="form-label">المعادل</label>
                                                         <input type="number" id="form-equivalent" class="form-control @error('form.equivalent') is-invalid @enderror"
-                                                            wire:model.live="form.equivalent"
                                                             x-model="equivalent"
                                                             @input="updateRate()"
                                                             step="0.000001" min="0" placeholder="المعادل" />
@@ -404,7 +402,8 @@
 
                                                     <div class="col-lg-12">
                                                         <label for="form-status" class="form-label">الحالة <span class="text-danger">*</span></label>
-                                                        <select id="form-status" class="form-select @error('form.status') is-invalid @enderror" wire:model="form.status">
+                                                        <select id="form-status" class="form-select @error('form.status') is-invalid @enderror" wire:model.blur="form.status">
+                                                            <option value="">اختر الحالة</option>
                                                             <option value="1">مفعل</option>
                                                             <option value="0">غير مفعل</option>
                                                         </select>
@@ -414,14 +413,16 @@
                                                     <div class="col-lg-6 mt-4">
                                                         <div class="form-check form-switch form-switch-md" dir="ltr">
                                                             <label class="form-check-label" for="form-is_local">عملة محلية</label>
-                                                            <input class="form-check-input" type="checkbox" id="form-is_local" wire:model="form.is_local" role="switch">
+                                                            <input class="form-check-input @error('form.is_local') is-invalid @enderror" type="checkbox" id="form-is_local" wire:model="form.is_local" role="switch">
+                                                            @error('form.is_local') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
 
                                                     <div class="col-lg-6 mt-4">
                                                         <div class="form-check form-switch form-switch-md" dir="ltr">
                                                             <label class="form-check-label" for="form-is_inventory">عملة المخزون الأساسية</label>
-                                                            <input class="form-check-input" type="checkbox" id="form-is_inventory" wire:model="form.is_inventory" role="switch">
+                                                            <input class="form-check-input @error('form.is_inventory') is-invalid @enderror" type="checkbox" id="form-is_inventory" wire:model="form.is_inventory" role="switch">
+                                                            @error('form.is_inventory') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                                                         </div>
                                                     </div>
 
