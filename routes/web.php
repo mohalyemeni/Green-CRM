@@ -44,6 +44,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/companies', 'pages::companies.index')->name('companies.index');
         Route::livewire('/countries', 'pages::countries.index')->name('countries.index');
         Route::livewire('/branches', 'pages::branches.index')->name('branches.index');
+        Route::livewire('/customer-groups', 'pages::customer-groups.index')->name('customer-groups.index');
     });
     Route::resource('category', CategoryController::class);
 });

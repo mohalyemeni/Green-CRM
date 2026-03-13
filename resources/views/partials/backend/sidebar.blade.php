@@ -102,6 +102,11 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة الفروع</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.customer-groups.index')}}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مجموعات العملاء</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
 
 
             </ul>
