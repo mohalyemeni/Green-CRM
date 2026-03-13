@@ -127,6 +127,11 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة أسباب خسارة الصفقات</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.pipeline-stages.index')}}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مراحل المبيعات</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
 
 
             </ul>

@@ -49,6 +49,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/lead-sources', 'pages::leadsources.index')->name('lead-sources.index');
         Route::livewire('/opportunity-sources', 'pages::opportunitysources.index')->name('opportunity-sources.index');
         Route::livewire('/lost-reasons', 'pages::lost-reasons.index')->name('lost-reasons.index');
+        Route::livewire('/pipeline-stages', 'pages::pipeline-stages.index')->name('pipeline-stages.index');
     });
     Route::resource('category', CategoryController::class);
 });
