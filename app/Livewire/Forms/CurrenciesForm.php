@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Enums\ActiveStatus;
 use App\Models\Currency;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
@@ -17,14 +18,14 @@ class CurrenciesForm extends Form
     public ?string $symbol          = null;
     public ?string $fraction_name   = null;
 
-    public float   $exchange_rate   = 1;
-    public float   $equivalent      = 1;
-    public float   $max_exchange_rate = 0;
-    public float   $min_exchange_rate = 0;
+    public ?float  $exchange_rate   = 1;
+    public ?float  $equivalent      = 1;
+    public ?float  $max_exchange_rate = 0;
+    public ?float  $min_exchange_rate = 0;
 
     public bool    $is_local        = false;
     public bool    $is_inventory    = false;
-    public int     $status          = 1; // 1 = ActiveStatus::ACTIVE
+    public int     $status          = ActiveStatus::ACTIVE->value; // 1 = ActiveStatus::ACTIVE
 
     public ?string $notes           = null;
 
@@ -126,10 +127,10 @@ class CurrenciesForm extends Form
         $this->symbol            = $currency->symbol;
         $this->fraction_name     = $currency->fraction_name;
 
-        $this->exchange_rate     = (float) $currency->exchange_rate;
-        $this->equivalent        = (float) $currency->equivalent;
-        $this->max_exchange_rate = (float) $currency->max_exchange_rate;
-        $this->min_exchange_rate = (float) $currency->min_exchange_rate;
+        $this->exchange_rate     = (float) $currency->exchange_rate ?? 0;
+        $this->equivalent        = (float) $currency->equivalent ?? 0;
+        $this->max_exchange_rate = (float) $currency->max_exchange_rate ?? 0;
+        $this->min_exchange_rate = (float) $currency->min_exchange_rate ?? 0;
 
         $this->is_local          = (bool) $currency->is_local;
         $this->is_inventory      = (bool) $currency->is_inventory;

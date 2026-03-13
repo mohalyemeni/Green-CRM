@@ -18,17 +18,31 @@
     },
     rate: @entangle('form.exchange_rate'),
     equivalent: @entangle('form.equivalent'),
-    updateEquivalent() {
-        let val = parseFloat(this.rate);
-        if (val > 0) {
-            this.equivalent = (1 / val).toFixed(6);
-        }
-    },
-    updateRate() {
-        let val = parseFloat(this.equivalent);
-        if (val > 0) {
-            this.rate = (1 / val).toFixed(6);
-        }
+    isCalculating: false,
+    init() {
+        this.$watch('rate', value => {
+            if (this.isCalculating) return;
+            this.isCalculating = true;
+            let val = parseFloat(value);
+            if (!value || isNaN(val) || val <= 0) {
+                this.equivalent = null;
+            } else {
+                this.equivalent = (1 / val).toFixed(6);
+            }
+            this.$nextTick(() => { this.isCalculating = false; });
+        });
+
+        this.$watch('equivalent', value => {
+            if (this.isCalculating) return;
+            this.isCalculating = true;
+            let val = parseFloat(value);
+            if (!value || isNaN(val) || val <= 0) {
+                this.rate = null;
+            } else {
+                this.rate = (1 / val).toFixed(6);
+            }
+            this.$nextTick(() => { this.isCalculating = false; });
+        });
     }
 }"
     x-on:open-currency-modal.window="showModal = true"
@@ -372,7 +386,6 @@
                                                         <label for="form-exchange_rate" class="form-label">سعر الصرف <span class="text-danger">*</span></label>
                                                         <input type="number" id="form-exchange_rate" class="form-control @error('form.exchange_rate') is-invalid @enderror"
                                                             x-model="rate"
-                                                            @input="updateEquivalent()"
                                                             step="0.000001" min="0.000001" placeholder="سعر الصرف" />
                                                         @error('form.exchange_rate') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
@@ -381,7 +394,6 @@
                                                         <label for="form-equivalent" class="form-label">المعادل</label>
                                                         <input type="number" id="form-equivalent" class="form-control @error('form.equivalent') is-invalid @enderror"
                                                             x-model="equivalent"
-                                                            @input="updateRate()"
                                                             step="0.000001" min="0" placeholder="المعادل" />
                                                         @error('form.equivalent') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>

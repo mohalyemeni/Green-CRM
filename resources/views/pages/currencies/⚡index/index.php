@@ -223,6 +223,7 @@ new #[Title('بيانات العملات')] class extends Component
     public function cancel(): void
     {
         $this->form->reset();
+        $this->resetPage();
         $this->resetValidation();
     }
 };
