@@ -12,7 +12,6 @@ class CurrenciesForm extends Form
 
     // ===== الخصائص (Properties) =====
 
-    #[Validate]
     public string  $name            = '';
     public ?string $code            = null;
     public ?string $symbol          = null;
@@ -28,6 +27,22 @@ class CurrenciesForm extends Form
     public int     $status          = 1; // 1 = ActiveStatus::ACTIVE
 
     public ?string $notes           = null;
+
+    // ===== التحديث التلقائي (Reciprocal Calculation) =====
+
+    public function updatedExchangeRate($value): void
+    {
+        if (is_numeric($value) && floatval($value) > 0) {
+            $this->equivalent = round(1 / floatval($value), 6);
+        }
+    }
+
+    public function updatedEquivalent($value): void
+    {
+        if (is_numeric($value) && floatval($value) > 0) {
+            $this->exchange_rate = round(1 / floatval($value), 6);
+        }
+    }
 
     // ===== قواعد التحقق (Validation Rules) =====
 
@@ -72,7 +87,7 @@ class CurrenciesForm extends Form
                     }
                 }
             ],
-            'status'            => 'required|integer',
+            'status'            => 'required|in:0,1',
 
             'notes'             => 'nullable|string',
         ];

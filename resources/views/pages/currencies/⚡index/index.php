@@ -10,7 +10,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Computed;
 use Livewire\WithoutUrlPagination;
 
-new class extends Component
+new #[Title('بيانات العملات')] class extends Component
 {
     use WithPagination, WithFileUploads, WithoutUrlPagination;
 

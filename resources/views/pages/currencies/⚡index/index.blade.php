@@ -321,21 +321,21 @@
                                                     <div class="col-lg-6">
                                                         <label for="form-name" class="form-label">اسم العملة <span class="text-danger">*</span></label>
                                                         <input type="text" id="form-name" class="form-control @error('form.name') is-invalid @enderror"
-                                                            wire:model="form.name" placeholder="أدخل اسم العملة" />
+                                                            wire:model.blur="form.name" placeholder="أدخل اسم العملة" />
                                                         @error('form.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
                                                     <div class="col-lg-6">
                                                         <label for="form-code" class="form-label">كود العملة <span class="text-danger">*</span></label>
                                                         <input type="text" id="form-code" class="form-control @error('form.code') is-invalid @enderror"
-                                                            wire:model="form.code" placeholder="مثال: USD, SAR..." />
+                                                            wire:model.blur="form.code" placeholder="مثال: USD, SAR..." />
                                                         @error('form.code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
                                                     <div class="col-lg-6">
                                                         <label for="form-symbol" class="form-label">رمز العملة</label>
                                                         <input type="text" id="form-symbol" class="form-control @error('form.symbol') is-invalid @enderror"
-                                                            wire:model="form.symbol" placeholder="مثال: $, ﷼..." />
+                                                            wire:model.blur="form.symbol" placeholder="مثال: $, ﷼..." />
                                                         @error('form.symbol') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
@@ -357,14 +357,14 @@
                                                     <div class="col-lg-6">
                                                         <label for="form-exchange_rate" class="form-label">سعر الصرف <span class="text-danger">*</span></label>
                                                         <input type="number" id="form-exchange_rate" class="form-control @error('form.exchange_rate') is-invalid @enderror"
-                                                            wire:model="form.exchange_rate" step="0.000001" min="0.000001" placeholder="سعر الصرف" />
+                                                            wire:model.live="form.exchange_rate" step="0.000001" min="0.000001" placeholder="سعر الصرف" />
                                                         @error('form.exchange_rate') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
                                                     <div class="col-lg-6">
                                                         <label for="form-equivalent" class="form-label">المعادل</label>
                                                         <input type="number" id="form-equivalent" class="form-control @error('form.equivalent') is-invalid @enderror"
-                                                            wire:model="form.equivalent" step="0.000001" min="0" placeholder="المعادل" />
+                                                            wire:model.live="form.equivalent" step="0.000001" min="0" placeholder="المعادل" />
                                                         @error('form.equivalent') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
@@ -386,7 +386,7 @@
                                                         <label for="form-status" class="form-label">الحالة <span class="text-danger">*</span></label>
                                                         <select id="form-status" class="form-select @error('form.status') is-invalid @enderror" wire:model="form.status">
                                                             <option value="1">مفعل</option>
-                                                            <option value="2">غير مفعل</option>
+                                                            <option value="0">غير مفعل</option>
                                                         </select>
                                                         @error('form.status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
@@ -421,14 +421,14 @@
                                                         <i class="ri-close-line me-1"></i> إلغاء
                                                     </button>
                                                     <button type="submit" class="btn btn-success" wire:loading.attr="disabled">
-                                                        <span wire:loading.remove wire:target="saveCurrency,updateCurrency">
+                                                        <span wire:loading.remove wire:target="submitCurrency,saveCurrency,updateCurrency">
                                                             @if($form->currency)
                                                             <i class="ri-save-line me-1"></i> تحديث البيانات
                                                             @else
                                                             <i class="ri-save-line me-1"></i> حفظ العملة
                                                             @endif
                                                         </span>
-                                                        <span wire:loading wire:target="saveCurrency,updateCurrency">
+                                                        <span wire:loading wire:target="submitCurrency,saveCurrency,updateCurrency">
                                                             <span class="spinner-border spinner-border-sm me-1" role="status"></span> جاري الحفظ...
                                                         </span>
                                                     </button>
