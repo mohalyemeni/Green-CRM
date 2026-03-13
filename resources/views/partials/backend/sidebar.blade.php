@@ -109,7 +109,12 @@
                 </li> <!-- end Dashboard Menu -->
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('admin.industries.index')}}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة القطاعات الأقتصادية</span>
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة الانشطة التجارية</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.lead-sources.index')}}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مصادر العملاء</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
 
