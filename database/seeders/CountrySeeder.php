@@ -80,11 +80,5 @@ class CountrySeeder extends Seeder
                 'updated_at' => $now,
             ]);
         }
-
-        // تفريغ الجدول لتجنب التكرار (اختياري)
-        DB::table('countries')->truncate();
-
-        // إدخال البيانات دفعة واحدة (Bulk Insert) لتحقيق أقصى سرعة
-        DB::table('countries')->insert($insertData);
     }
 }
