@@ -80,5 +80,8 @@ class CountrySeeder extends Seeder
                 'updated_at' => $now,
             ]);
         }
+
+        // إدخال البيانات دفعة واحدة (Bulk Insert) لتحقيق أقصى سرعة
+        DB::table('countries')->insert($insertData);
     }
 }
