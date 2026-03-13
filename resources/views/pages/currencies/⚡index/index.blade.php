@@ -15,6 +15,20 @@
         } else {
             this.selectedIds = [];
         }
+    },
+    rate: @entangle('form.exchange_rate'),
+    equivalent: @entangle('form.equivalent'),
+    updateEquivalent() {
+        let val = parseFloat(this.rate);
+        if (val > 0) {
+            this.equivalent = (1 / val).toFixed(6);
+        }
+    },
+    updateRate() {
+        let val = parseFloat(this.equivalent);
+        if (val > 0) {
+            this.rate = (1 / val).toFixed(6);
+        }
     }
 }"
     x-on:open-currency-modal.window="showModal = true"
@@ -357,14 +371,20 @@
                                                     <div class="col-lg-6">
                                                         <label for="form-exchange_rate" class="form-label">سعر الصرف <span class="text-danger">*</span></label>
                                                         <input type="number" id="form-exchange_rate" class="form-control @error('form.exchange_rate') is-invalid @enderror"
-                                                            wire:model.live="form.exchange_rate" step="0.000001" min="0.000001" placeholder="سعر الصرف" />
+                                                            wire:model.debounce.500ms="form.exchange_rate"
+                                                            x-model="rate"
+                                                            @input="updateEquivalent()"
+                                                            step="0.000001" min="0.000001" placeholder="سعر الصرف" />
                                                         @error('form.exchange_rate') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
                                                     <div class="col-lg-6">
                                                         <label for="form-equivalent" class="form-label">المعادل</label>
                                                         <input type="number" id="form-equivalent" class="form-control @error('form.equivalent') is-invalid @enderror"
-                                                            wire:model.live="form.equivalent" step="0.000001" min="0" placeholder="المعادل" />
+                                                            wire:model.live="form.equivalent"
+                                                            x-model="equivalent"
+                                                            @input="updateRate()"
+                                                            step="0.000001" min="0" placeholder="المعادل" />
                                                         @error('form.equivalent') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 

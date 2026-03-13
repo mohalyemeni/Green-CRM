@@ -28,22 +28,6 @@ class CurrenciesForm extends Form
 
     public ?string $notes           = null;
 
-    // ===== التحديث التلقائي (Reciprocal Calculation) =====
-
-    public function updatedExchangeRate($value): void
-    {
-        if (is_numeric($value) && floatval($value) > 0) {
-            $this->equivalent = round(1 / floatval($value), 6);
-        }
-    }
-
-    public function updatedEquivalent($value): void
-    {
-        if (is_numeric($value) && floatval($value) > 0) {
-            $this->exchange_rate = round(1 / floatval($value), 6);
-        }
-    }
-
     // ===== قواعد التحقق (Validation Rules) =====
 
     public function rules(): array
