@@ -32,7 +32,7 @@
                             <div class="search-box position-relative" x-data="{ search: @entangle('search') }">
                                 <input type="text"
                                     class="form-control search bg-light border-light"
-                                    placeholder="ابحث عن اسم المصدر، الكود..."
+                                    placeholder="ابحث عن اسم مصدر الفرصة، الكود..."
                                     wire:model.lazy="search">
 
                                 <i class="ri-search-line search-icon" wire:loading.remove wire:target="search"></i>
@@ -79,12 +79,12 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="card" id="leadSourcesList">
+            <div class="card" id="opportunitySourcesList">
                 <div class="card-header border-0">
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-10">
-                            <h5 class="card-title mb-0">إدارة مصادر العملاء</h5>
-                            <p><small>عرض وإدارة جميع قنوات الحصول على العملاء المحتملين.</small></p>
+                            <h5 class="card-title mb-0">إدارة مصادر الفرص البيعية</h5>
+                            <p><small>عرض وإدارة كافة القنوات والمصادر التي تولد فرصاً بيعية.</small></p>
                         </div>
 
                         <div class="col-sm-auto ms-auto">
@@ -102,7 +102,7 @@
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
-                            <table class="table align-middle table-nowrap mb-0" id="leadSourceTable">
+                            <table class="table align-middle table-nowrap mb-0" id="opportunitySourceTable">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 50px;">
@@ -161,7 +161,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
-                                    @forelse($this->leadSourcesList as $source)
+                                    @forelse($this->opportunitySourcesList as $source)
                                     <tr>
                                         <th scope="row">
                                             <div class="form-check">
@@ -173,7 +173,7 @@
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
                                                 <li class="list-inline-item">
-                                                    <a class="edit-item-btn" href="javascript:void(0);" @click="$wire.editLeadSource({{ $source->id }}).then(() => showModal = true)"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                    <a class="edit-item-btn" href="javascript:void(0);" @click="$wire.editOpportunitySource({{ $source->id }}).then(() => showModal = true)"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
                                                 </li>
                                                 <li class="list-inline-item">
                                                     <a class="remove-item-btn" href="javascript:void(0);" @click="$wire.confirmDelete({{ $source->id }}).then(() => showDeleteModal = true)">
@@ -191,7 +191,7 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-xs flex-shrink-0 me-2">
                                                     <div class="avatar-title rounded-circle fs-16" style="background-color: {{ $source->color ?? '#eff2f7' }}; color: #fff;">
-                                                        <i class="{{ $source->icon ?? 'ri-links-line' }}"></i>
+                                                        <i class="{{ $source->icon ?? 'ri-lightbulb-line' }}"></i>
                                                     </div>
                                                 </div>
                                                 <small class="text-muted" dir="ltr">{{ $source->color }}</small>
@@ -213,7 +213,7 @@
                                                 <div class="text-center">
                                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
                                                     <h5 class="mt-2">عذراً! لم يتم العثور على نتائج</h5>
-                                                    <p class="text-muted mb-0">لم نعثر على أي مصادر العملاء المحتملون مطابقة لبحثك.</p>
+                                                    <p class="text-muted mb-0">لم نعثر على أي مصادر فرص بيعية مطابقة لبحثك.</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -221,7 +221,7 @@
                                     @endforelse
                                 </tbody>
                             </table>
-                            {{$this->leadSourcesList->links('livewire::custom-pagination-links')}}
+                            {{$this->opportunitySourcesList->links('livewire::custom-pagination-links')}}
 
                             <div wire:ignore.self
                                 class="modal fade"
@@ -235,15 +235,15 @@
                                     <div class="modal-content">
                                         <div class="modal-header bg-light p-3">
                                             <h5 class="modal-title">
-                                                @if($form->leadSource)
-                                                <i class="ri-edit-line me-2 text-warning"></i> تعديل بيانات المصدر
+                                                @if($form->opportunitySource)
+                                                <i class="ri-edit-line me-2 text-warning"></i> تعديل مصدر الفرصة
                                                 @else
-                                                <i class="ri-add-box-line me-2 text-success"></i> إضافة مصدر عملاء جديد
+                                                <i class="ri-add-box-line me-2 text-success"></i> إضافة مصدر فرص جديد
                                                 @endif
                                             </h5>
                                             <button type="button" class="btn-close" aria-label="Close" @click="showModal = false; $wire.cancel()"></button>
                                         </div>
-                                        <form wire:submit.prevent="submitLeadSource" autocomplete="off">
+                                        <form wire:submit.prevent="submitOpportunitySource" autocomplete="off">
                                             <div class="modal-body">
                                                 <div class="row g-3">
                                                     <div class="col-12">
@@ -255,14 +255,14 @@
                                                     <div class="col-lg-6">
                                                         <label class="form-label">اسم المصدر (عربي) <span class="text-danger">*</span></label>
                                                         <input type="text" class="form-control @error('form.name') is-invalid @enderror"
-                                                            wire:model.blur="form.name" placeholder="مثال: فيسبوك" />
+                                                            wire:model.blur="form.name" placeholder="مثال: مناقصات" />
                                                         @error('form.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
                                                     <div class="col-lg-6">
                                                         <label class="form-label">الاسم بالإنجليزية</label>
                                                         <input type="text" class="form-control"
-                                                            wire:model.blur="form.name_en" placeholder="Example: Facebook" />
+                                                            wire:model.blur="form.name_en" placeholder="Example: Tenders" />
                                                     </div>
 
                                                     <div class="col-lg-6">
@@ -287,7 +287,7 @@
                                                         <label class="form-label">أيقونة (Remix Icon)</label>
                                                         <div class="input-group">
                                                             <span class="input-group-text"><i class="{{ $form->icon ?: 'ri-image-line' }}"></i></span>
-                                                            <input type="text" class="form-control" wire:model.live="form.icon" placeholder="ri-facebook-fill" />
+                                                            <input type="text" class="form-control" wire:model.live="form.icon" placeholder="ri-government-line" />
                                                         </div>
                                                     </div>
 
@@ -306,7 +306,7 @@
 
                                                     <div class="col-12">
                                                         <label class="form-label">الوصف</label>
-                                                        <textarea class="form-control" wire:model="form.description" rows="2" placeholder="ملاحظات حول المصدر..."></textarea>
+                                                        <textarea class="form-control" wire:model="form.description" rows="2" placeholder="ملاحظات حول مصدر الفرصة..."></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -315,8 +315,8 @@
                                                 <div class="hstack gap-2 justify-content-end">
                                                     <button type="button" class="btn btn-light" @click="showModal = false; $wire.cancel()">إلغاء</button>
                                                     <button type="submit" class="btn btn-success" wire:loading.attr="disabled">
-                                                        <span wire:loading.remove wire:target="submitLeadSource"><i class="ri-save-line me-1"></i> حفظ البيانات</span>
-                                                        <span wire:loading wire:target="submitLeadSource"><span class="spinner-border spinner-border-sm me-1"></span> جاري الحفظ...</span>
+                                                        <span wire:loading.remove wire:target="submitOpportunitySource"><i class="ri-save-line me-1"></i> حفظ البيانات</span>
+                                                        <span wire:loading wire:target="submitOpportunitySource"><span class="spinner-border spinner-border-sm me-1"></span> جاري الحفظ...</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -332,8 +332,8 @@
                                         <div class="modal-body p-5 text-center">
                                             <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#405189,secondary:#f06548" style="width:90px;height:90px"></lord-icon>
                                             <div class="mt-4 text-center">
-                                                <h4 class="fs-semibold">حذف مصدر العملاء؟</h4>
-                                                <p class="text-muted">هل أنت متأكد؟ سيتم حذف هذا المصدر من قاعدة البيانات.</p>
+                                                <h4 class="fs-semibold">حذف مصدر الفرصة؟</h4>
+                                                <p class="text-muted">هل أنت متأكد؟ سيتم حذف هذا المصدر نهائياً من قاعدة البيانات.</p>
                                                 <div class="hstack gap-2 justify-content-center remove">
                                                     <button class="btn btn-light" @click="showDeleteModal = false">إلغاء</button>
                                                     <button class="btn btn-danger" wire:click="deleteSource" @click="showDeleteModal = false">نعم، احذف!</button>
@@ -344,7 +344,7 @@
                                 </div>
                             </div>
 
-                            @include('partials.backend.lead-sources.offcanvas')
+                            @include('partials.backend.opportunity-sources.offcanvas')
                         </div>
                     </div>
                 </div>

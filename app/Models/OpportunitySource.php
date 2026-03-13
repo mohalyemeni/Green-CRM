@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\ActiveStatus;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
-class LeadSource extends Model
+class OpportunitySource extends Model
 {
     use HasFactory, SoftDeletes, SearchableTrait;
 
@@ -22,7 +22,7 @@ class LeadSource extends Model
             if (empty($source->code)) {
                 $latestSource = static::withTrashed()->latest('id')->first();
                 $nextId = $latestSource ? $latestSource->id + 1 : 1;
-                $source->code = 'LS-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+                $source->code = 'OS-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
             }
         });
     }
@@ -61,10 +61,10 @@ class LeadSource extends Model
     protected $searchable = [
         'columns' => [
             // اسم_الجدول.اسم_العمود => الأهمية
-            'lead_sources.name'    => 10,
-            'lead_sources.name_en' => 10,
-            'lead_sources.code'    => 8,
-            'lead_sources.description' => 5,
+            'opportunity_sources.name'        => 10,
+            'opportunity_sources.name_en'     => 10,
+            'opportunity_sources.code'        => 8,
+            'opportunity_sources.description' => 5,
         ],
     ];
 

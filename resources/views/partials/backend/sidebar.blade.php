@@ -117,6 +117,11 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مصادر العملاء</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.opportunity-sources.index')}}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">إدارة مصادر الفرص البيعية</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
 
 
             </ul>
