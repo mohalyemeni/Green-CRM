@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\ActiveStatus;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+
 class Company extends Model
 {
-    use HasFactory, SoftDeletes, SearchableTrait; // أضفنا SoftDeletes هنا
+    use HasFactory, SoftDeletes, SearchableTrait, HasSlug; // أضفنا SoftDeletes هنا
 
     /**
      * الحقول المسموح بتعبئتها جماعياً
@@ -96,5 +99,17 @@ class Company extends Model
     public function deleter()
     {
         return $this->belongsTo(User::class, 'deleted_by');
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->allowDuplicateSlugs()
+            ->usingLanguage('ar');
     }
 }

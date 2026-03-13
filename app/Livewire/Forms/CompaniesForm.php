@@ -36,8 +36,8 @@ class CompaniesForm extends Form
             'name_en'          => 'nullable|string|max:255',
             'short_name'       => 'nullable|string|max:50',
 
-            // الـ slug يجب أن يكون فريداً على مستوى جدول الشركات
-            'slug'             => 'required|string|max:255|unique:companies,slug,' . $companyId,
+            // الـ slug يتم توليده تلقائياً، التحقق هنا كإجراء احترازي
+            'slug'             => 'nullable|string|max:255|unique:companies,slug,' . $companyId,
 
             'website'          => 'nullable|url|max:255',
             'logo'             => 'nullable|string|max:255', // إذا كنت تستخدم رفع ملفات غيرها إلى: nullable|image|max:2048
@@ -114,7 +114,7 @@ class CompaniesForm extends Form
             'name'             => $this->name ?: null,
             'name_en'          => $this->name_en ?: null,
             'short_name'       => $this->short_name ?: null,
-            'slug'             => $this->slug ?: null,
+            // 'slug'             => $this->slug ?: null,
             'website'          => $this->website ?: null,
             'logo'             => $this->logo ?: null,
             'base_currency_id' => $this->base_currency_id ?: null,
@@ -136,7 +136,7 @@ class CompaniesForm extends Form
             'name'             => $this->name ?: null,
             'name_en'          => $this->name_en ?: null,
             'short_name'       => $this->short_name ?: null,
-            'slug'             => $this->slug ?: null,
+            // 'slug'             => $this->slug ?: null,
             'website'          => $this->website ?: null,
             'logo'             => $this->logo ?: null,
             'base_currency_id' => $this->base_currency_id ?: null,

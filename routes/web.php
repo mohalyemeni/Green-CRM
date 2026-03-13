@@ -43,6 +43,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/currencies', 'pages::currencies.index')->name('currencies.index');
         Route::livewire('/companies', 'pages::companies.index')->name('companies.index');
         Route::livewire('/countries', 'pages::countries.index')->name('countries.index');
+        Route::livewire('/branches', 'pages::branches.index')->name('branches.index');
     });
     Route::resource('category', CategoryController::class);
 });

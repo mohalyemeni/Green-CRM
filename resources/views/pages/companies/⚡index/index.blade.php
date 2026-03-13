@@ -260,6 +260,20 @@
                                                         </h6>
                                                     </div>
 
+                                                    {{-- عرض رسائل الخطأ للحقول المخفية --}}
+                                                    @if($errors->has('form.slug'))
+                                                    <div class="col-12">
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <i class="ri-error-warning-line me-2 align-middle"></i>
+                                                            <strong>تنبيه:</strong> حدث خطأ في الرابط التلقائي:
+                                                            <ul class="mb-0 mt-1">
+                                                                @error('form.slug') <li>{{ $message }}</li> @enderror
+                                                            </ul>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+
                                                     <div class="col-lg-6">
                                                         <label for="form-name" class="form-label">اسم النشاط <span class="text-danger">*</span></label>
                                                         <input type="text" id="form-name" class="form-control @error('form.name') is-invalid @enderror"
@@ -281,10 +295,10 @@
                                                         @error('form.short_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-6 d-none">
                                                         <label for="form-slug" class="form-label">رابط النظام (Slug) <span class="text-danger">*</span></label>
                                                         <input type="text" id="form-slug" class="form-control @error('form.slug') is-invalid @enderror"
-                                                            wire:model.blur="form.slug" placeholder="my-era-gems" />
+                                                            wire:model.blur="form.slug" placeholder="my-era-gems" readonly />
                                                         @error('form.slug') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>
 
