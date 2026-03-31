@@ -27,5 +27,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductsTagsSeeder::class);
         $this->call(ProductsImagesSeeder::class);
         $this->call(CountrySeeder::class);
+        $this->call(LeadSourceSeeder::class);
+        $this->call(OpportunitySourceSeeder::class);
+        $this->call(LostReasonSeeder::class);
+        $this->call(PipelineStageSeeder::class);
+        $this->call(LeadStatusSeeder::class);
     }
 }
