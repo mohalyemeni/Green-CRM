@@ -16,11 +16,11 @@ class BranchSeeder extends Seeder
     public function run(): void
     {
         // 1. جلب بيانات الشركة والعملة لربطها بالفرع
-        $companyId = DB::table('companies')->where('slug', 'al-masar-systems')->value('id');
+        $companyId = DB::table('companies')->where('slug', 'green-land-company')->value('id');
         $currencyId = DB::table('currencies')->where('code', 'YER')->value('id');
 
         // ملاحظة: إذا لم يكن لديك جدول دول مفعل، اترك country_id كـ null أو تأكد من وجوده
-        $countryId = DB::table('countries')->where('iso_code', 'YE')->value('id');
+        $countryId = DB::table('countries')->where('country_code', 'YE')->value('id');
 
         if (!$companyId) {
             $this->command->error('يجب تشغيل CompanySeeder أولاً!');
