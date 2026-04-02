@@ -69,7 +69,7 @@ new #[Title('بيانات الفروع')] class extends Component
 
         return Branch::query()
             // 2. تحسين الأداء: Eager Loading
-            ->with(['company', 'country', 'currency', 'creator', 'editor'])
+            ->with(['company', 'currency', 'creator', 'editor'])
 
             // 3. البحث الذكي
             ->when($this->search, fn($q) => $q->search('%' . $this->search . '%'))

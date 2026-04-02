@@ -339,9 +339,11 @@
                                                         <label for="form-country_id" class="form-label">الدولة</label>
                                                         <select id="form-country_id" class="form-select @error('form.country_id') is-invalid @enderror" wire:model="form.country_id">
                                                             <option value="">اختر الدولة...</option>
-                                                            @foreach(\App\Models\Country::all() as $country)
-                                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+
+                                                            @foreach($this->countries as $id => $name)
+                                                            <option value="{{ $id }}">{{ $name }}</option>
                                                             @endforeach
+
                                                         </select>
                                                         @error('form.country_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     </div>

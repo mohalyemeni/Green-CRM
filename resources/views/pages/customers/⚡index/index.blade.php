@@ -493,11 +493,13 @@
 
                                                         <div class="col-lg-6">
                                                             <label class="form-label fw-medium">الدولة</label>
-                                                            <select class="form-control @error('form.country') is-invalid @enderror" wire:model.blur="form.country">
+                                                            <select class="form-select @error('form.country') is-invalid @enderror" wire:model.blur="form.country">
                                                                 <option value="">كل الدول</option>
-                                                                @foreach($this->countries() as $country)
-                                                                <option value="{{ $country }}">{{ $country }}</option>
+
+                                                                @foreach($this->countries as $id => $name)
+                                                                <option value="{{ $id }}">{{ $name }}</option>
                                                                 @endforeach
+
                                                             </select>
                                                             @error('form.country') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                         </div>
