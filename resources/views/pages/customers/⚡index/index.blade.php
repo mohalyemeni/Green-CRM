@@ -168,14 +168,14 @@
                                             </div>
                                         </th>
 
-                                        <th @click="sortBy('country')" style="cursor: pointer; user-select: none;">
+                                        <th @click="sortBy('country_id')" style="cursor: pointer; user-select: none;">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span>الدولة</span>
                                                 <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
-                                                    <template x-if="sortField !== 'country'">
+                                                    <template x-if="sortField !== 'country_id'">
                                                         <span class="text-muted opacity-50">↑↓</span>
                                                     </template>
-                                                    <template x-if="sortField === 'country'">
+                                                    <template x-if="sortField === 'country_id'">
                                                         <span>
                                                             <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
                                                             <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
@@ -255,7 +255,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
-                                    @forelse($this->customers as $customer)
+                                    @forelse($this->customersList as $customer)
                                     <tr>
                                         <th scope="row">
                                             <div class="form-check">
@@ -302,7 +302,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="country">{{ $customer->country ?? '-' }}</td>
+                                        <td class="country">{{ $customer->country?->name ?? '-' }}</td>
                                         <td class="email">{{ $customer->email ?? '-' }}</td>
                                         <td class="phone">{{ $customer->mobile }}</td>
 
@@ -337,7 +337,7 @@
                                 </tbody>
                             </table>
 
-                            {{$this->customers->links('livewire::custom-pagination-links')}}
+                            {{$this->customersList->links('livewire::custom-pagination-links')}}
 
                             <div wire:ignore.self
                                 class="modal fade"
@@ -493,7 +493,7 @@
 
                                                         <div class="col-lg-6">
                                                             <label class="form-label fw-medium">الدولة</label>
-                                                            <select class="form-select @error('form.country') is-invalid @enderror" wire:model.blur="form.country">
+                                                            <select class="form-select @error('form.country_id') is-invalid @enderror" wire:model.blur="form.country_id">
                                                                 <option value="">كل الدول</option>
 
                                                                 @foreach($this->countries as $id => $name)
@@ -501,7 +501,7 @@
                                                                 @endforeach
 
                                                             </select>
-                                                            @error('form.country') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            @error('form.country_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                         </div>
 
                                                         <div class="col-12 mt-3">

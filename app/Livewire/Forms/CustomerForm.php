@@ -34,7 +34,7 @@ class CustomerForm extends Form
     public ?string $street_name = null;
     public ?string $district = null;
     public ?string $city = null;
-    public ?string $country = null;
+    public ?int $country_id = null;
 
     // الحالة والملاحظات (القيمة الافتراضية من Enum)
     public int $status = CustomerStatus::ACTIVE->value;
@@ -73,7 +73,7 @@ class CustomerForm extends Form
             'street_name' => 'nullable|string|max:255',
             'district' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
+            'country_id' => 'nullable|integer|exists:countries,id',
 
             // الحالة والملاحظات
             'status' => ['required', 'integer', new Enum(CustomerStatus::class)],
@@ -97,7 +97,7 @@ class CustomerForm extends Form
             'street_name' => 'اسم الشارع',
             'district' => 'الحي',
             'city' => 'المدينة',
-            'country' => 'الدولة',
+            'country_id' => 'الدولة',
             'status' => 'الحالة',
             'notes' => 'الملاحظات',
         ];
@@ -144,7 +144,7 @@ class CustomerForm extends Form
         $this->street_name = $customer->street_name;
         $this->district = $customer->district;
         $this->city = $customer->city;
-        $this->country = $customer->country;
+        $this->country_id = $customer->country_id;
 
         // الحالة والملاحظات
         // معالجة CustomerStatus Enum
@@ -177,7 +177,7 @@ class CustomerForm extends Form
                 'street_name',
                 'district',
                 'city',
-                'country',
+                'country_id',
                 'status',
                 'notes',
             ]))->map(fn($v) => $v === '' ? null : $v)->toArray(),
@@ -206,7 +206,7 @@ class CustomerForm extends Form
                 'street_name',
                 'district',
                 'city',
-                'country',
+                'country_id',
                 'status',
                 'notes',
             ]))->map(fn($v) => $v === '' ? null : $v)->toArray(),

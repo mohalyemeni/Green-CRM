@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id(); // المفتاح الأساسي
 
             // البيانات الأساسية
-            $table->string('customer_number')->unique()->comment('رقم العميل');
-            $table->string('name')->required()->comment('اسم العميل');
+            $table->string('customer_number')->unique()->index()->comment('رقم العميل');
+            $table->string('name')->required()->index()->comment('اسم العميل');
             $table->tinyInteger('gender')->unsigned()->nullable()->comment('الجنس: 1=ذكر، 2=أنثى');
 
             // بيانات التواصل
             $table->string('phone')->nullable()->comment('رقم الهاتف');
-            $table->string('mobile')->required()->comment('رقم الموبايل');
+            $table->string('mobile')->required()->index()->comment('رقم الموبايل');
             $table->string('whatsapp')->nullable()->comment('رقم الوتس');
             $table->string('email')->unique()->nullable()->comment('البريد الإلكتروني');
 
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('street_name')->nullable()->comment('اسم الشارع');
             $table->string('district')->nullable()->comment('الحي');
             $table->string('city')->nullable()->comment('المدينة');
-            $table->string('country')->nullable()->comment('الدولة');
+            $table->foreignId('country_id')->nullable()->constrained('countries')->nullOnDelete()->comment('الدولة');
 
             // الحالة والملاحظات
             $table->tinyInteger('status')->default(1)->comment('1: Active, 2: Inactive, 3: Suspended حالة التفعيل');

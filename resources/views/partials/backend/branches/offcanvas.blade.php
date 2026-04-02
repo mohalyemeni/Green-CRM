@@ -2,7 +2,7 @@
     :class="{ 'show': showOffcanvas }"
     :style="showOffcanvas ? 'visibility: visible;' : 'visibility: hidden;'">
     <div class="offcanvas-header bg-light">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">تصفية الفروع</h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">تصفية العملاء</h5>
         <button type="button" class="btn-close text-reset" @click="$wire.resetFilters(); showOffcanvas = false" aria-label="Close"></button>
     </div>
 
@@ -25,11 +25,11 @@
                 </div>
             </div>
 
-            {{-- Status Filter --}}
+            {{-- Status Filter (حالة العميل) --}}
             <div class="mb-4">
                 <label class="form-label text-muted text-uppercase fw-semibold mb-3">الحالة</label>
                 <div class="row g-2">
-                    @foreach(\App\Enums\ActiveStatus::cases() as $status)
+                    @foreach(\App\Enums\CustomerStatus::cases() as $status)
                     <div class="col-lg-6">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" wire:model="selectedStatuses" id="status_{{ $status->value }}" value="{{ $status->value }}">
@@ -42,38 +42,24 @@
                 </div>
             </div>
 
-            {{-- Company Filter (مكتبة Choices) --}}
-            <div class="mb-4" wire:ignore x-data="{
-                choice: null,
-                init() {
-                    this.choice = new Choices(this.$refs.companySelect, {
-                        searchEnabled: true,
-                        removeItemButton: true,
-                        shouldSort: false,
-                        placeholderValue: 'ابحث عن الشركة...',
-                        itemSelectText: ''
-                    });
-
-                    window.addEventListener('filters-reset', () => {
-                        this.choice.removeActiveItems();
-                    });
-
-                    this.$refs.companySelect.addEventListener('change', (e) => {
-                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-                        $wire.set('selectedCompanies', selectedValues, false);
-                    });
-                }
-            }">
-                <label for="company-select" class="form-label text-muted text-uppercase fw-semibold mb-3">الشركة التابع لها</label>
-                <select x-ref="companySelect" class="form-control" id="company-select" multiple>
-                    <option value="">اختر الشركة...</option>
-                    @foreach(\App\Models\Company::all() as $company)
-                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+            {{-- Gender Filter (فلتر الجنس - جديد) --}}
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold mb-3">الجنس</label>
+                <div class="row g-2">
+                    @foreach(\App\Enums\Gender::cases() as $gender)
+                    <div class="col-lg-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" wire:model="selectedGenders" id="gender_{{ $gender->value }}" value="{{ $gender->value }}">
+                            <label class="form-check-label text-{{ $gender->color() }}" for="gender_{{ $gender->value }}">
+                                {{ $gender->label() }}
+                            </label>
+                        </div>
+                    </div>
                     @endforeach
-                </select>
+                </div>
             </div>
 
-            {{-- Country Filter (مكتبة Choices) --}}
+            {{-- Country Filter (مكتبة Choices) باستخدام الدالة المحسوبة --}}
             <div class="mb-4" wire:ignore x-data="{
                 choice: null,
                 init() {
@@ -98,8 +84,8 @@
                 <label for="country-select" class="form-label text-muted text-uppercase fw-semibold mb-3">الدولة</label>
                 <select x-ref="countrySelect" class="form-control" id="country-select" multiple>
                     <option value="">اختر الدولة...</option>
-                    @foreach(\App\Models\Country::all() as $country)
-                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                    @foreach($this->countries as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
                     @endforeach
                 </select>
             </div>

@@ -34,7 +34,7 @@ class Customer extends Model
         'street_name',
         'district',
         'city',
-        'country',
+        'country_id',
 
         // الحالة والملاحظات
         'status',
@@ -75,7 +75,6 @@ class Customer extends Model
             'customers.phone'           => 8,
             'customers.email'           => 8,
             'customers.city'            => 5,
-            'customers.country'         => 5,
         ],
     ];
 
@@ -91,5 +90,10 @@ class Customer extends Model
     public function editor()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

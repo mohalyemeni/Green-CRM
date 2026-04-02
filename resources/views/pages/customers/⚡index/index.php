@@ -1,10 +1,12 @@
 <?php
 
-use App\Enums\ActiveStatus;
-use App\Enums\CustomerStatus;
-use App\Livewire\Forms\CustomerForm;
-use App\Models\Country;
+namespace App\Livewire;
+
+use App\Livewire\Forms\CustomerForm; // استخدام فورم العملاء
 use App\Models\Customer;
+use App\Models\Country;
+use App\Enums\CustomerStatus;
+use App\Enums\ActiveStatus; // مستخدم لفلترة الدول فقط إن وجد
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,17 +22,16 @@ new #[Title('بيانات العملاء')] class extends Component
 
     // Filters
     public $search = '';
-    public $country = '';
-    public $status = '';
-    public $created_at = '';
+    public $status = '';  // فلتر مبسط
 
-    // Offcanvas filters
+    // Offcanvas filters (فلاتر متقدمة)
     public $created_from = '';
     public $created_to = '';
-    public $selectedCountries = [];
     public $selectedStatuses = [];
+    public $selectedGenders = []; // فلتر البحث حسب الجنس
+    public $selectedCountries = []; // فلتر البحث عن عملاء في دول محددة
 
-    public $sortField = 'created_at';
+    public $sortField = 'created_at'; // الترتيب الافتراضي
     public $sortDirection = 'desc';
 
     // Pagination
@@ -49,54 +50,54 @@ new #[Title('بيانات العملاء')] class extends Component
 
     // Query string for URL persistence
     protected $queryString = [
-        'search'            => ['except' => ''],
-        'country'           => ['except' => ''],
-        'status'            => ['except' => ''],
-        'created_from'      => ['except' => ''],
-        'created_to'        => ['except' => ''],
-        'selectedCountries' => ['except' => []],
-        'selectedStatuses'  => ['except' => []],
-        'sortField'         => ['except' => 'created_at'],
-        'sortDirection'     => ['except' => 'desc'],
+        'search'             => ['except' => ''],
+        'status'             => ['except' => ''],
+        'selectedCountries'  => ['except' => []],
+        'selectedStatuses'   => ['except' => []],
+        'selectedGenders'    => ['except' => []],
+        'created_from'       => ['except' => ''],
+        'created_to'         => ['except' => ''],
+        'sortField'          => ['except' => 'created_at'],
+        'sortDirection'      => ['except' => 'desc'],
     ];
 
     #[Computed]
-    public function customers()
+    public function customersList()
     {
-        // 1. حماية أمنية: تحديد الحقول المسموح بالترتيب بناءً عليها متوافقة مع الواجهة والجدول
-        $validSortFields = ['customer_number', 'name', 'country', 'email', 'mobile', 'phone', 'status', 'created_at'];
+        $validSortFields = ['customer_number', 'name', 'email', 'mobile', 'phone', 'status', 'created_at', 'country_id'];
         $sortField = in_array($this->sortField, $validSortFields) ? $this->sortField : 'created_at';
 
         return Customer::query()
-            // 2. تحسين الأداء: جلب بيانات المستخدمين المرتبطين دفعة واحدة (Eager Loading)
-            ->with(['creator', 'editor'])
+            // 2. تحسين الأداء: Eager Loading
+            ->with(['creator', 'editor', 'country']) // تم إضافة علاقة country
 
-            // 3. البحث الذكي (يحتوي على ترتيب داخلي حسب الأهمية باستخدام SearchableTrait)
-            ->when($this->search, fn($q) => $q->search('%' . $this->search . '%'))
+            // 3. البحث الذكي (باستخدام SearchableTrait)
+            ->when($this->search, fn($q) => $q->search($this->search))
 
-            // 4. الفلترة حسب الدولة 
-            ->when($this->country, fn($q) => $q->where('country', 'LIKE', '%' . $this->country . '%'))
-            ->when(!empty($this->selectedCountries), fn($q) => $q->whereIn('country', $this->selectedCountries))
-
-            // 5. معالجة الحالة (تتوافق مع CustomerStatus Enum كرقم Integer)
+            // 4. فلترة الحالة
             ->when($this->status !== '', fn($q) => $q->where('status', (int) $this->status))
-            ->when(!empty($this->selectedStatuses), fn($q) => $q->whereIn('status', $this->selectedStatuses))
+            ->when(!empty($this->selectedStatuses), fn($q) => $q->whereIn('status', array_map('intval', $this->selectedStatuses)))
 
-            // Filter By Dates (Offcanvas)
+            // 5. فلترة الجنس والدول
+            ->when(!empty($this->selectedGenders), fn($q) => $q->whereIn('gender', array_map('intval', $this->selectedGenders)))
+            ->when(!empty($this->selectedCountries), fn($q) => $q->whereIn('country_id', $this->selectedCountries))
+
+            // 6. Filter By Dates
             ->when($this->created_from, fn($q) => $q->whereDate('created_at', '>=', $this->created_from))
             ->when($this->created_to, fn($q) => $q->whereDate('created_at', '<=', $this->created_to))
 
-            // 6. الترتيب: يُطبَّق دائماً (مع الحماية الأمنية)
+            // 7. الترتيب
             ->orderBy($sortField, $this->sortDirection)
 
-            // 7. الترقيم
+            // 8. الترقيم
             ->paginate($this->perPage);
     }
 
     #[Computed]
     public function countries()
     {
-        return Country::where('status', ActiveStatus::ACTIVE)
+        // جلب الدول المفعلة لعرضها في قوائم الفلترة والـ Form
+        return Country::where('status', ActiveStatus::ACTIVE->value)
             ->whereNotNull('name')
             ->pluck('name', 'id')
             ->sort();
@@ -111,9 +112,8 @@ new #[Title('بيانات العملاء')] class extends Component
             : CustomerStatus::ACTIVE;
 
         $customer->save();
-
         $this->dispatch('notify', type: 'info', message: 'تم تغيير حالة العميل بنجاح.');
-        unset($this->customers);
+        unset($this->customersList);
     }
 
     public function sortBy($field)
@@ -133,11 +133,6 @@ new #[Title('بيانات العملاء')] class extends Component
         $this->resetPage();
     }
 
-    public function updatedCountry() // تم تغييرها من updatedDepartment لتتوافق مع حقول الجدول
-    {
-        $this->resetPage();
-    }
-
     public function updatedStatus()
     {
         $this->resetPage();
@@ -151,7 +146,8 @@ new #[Title('بيانات العملاء')] class extends Component
 
     public function resetFilters()
     {
-        $this->reset(['search', 'country', 'status', 'created_from', 'created_to', 'selectedCountries', 'selectedStatuses']);
+        // تصفير فلاتر العملاء
+        $this->reset(['search', 'status', 'selectedGenders', 'selectedCountries', 'selectedStatuses', 'created_from', 'created_to']);
         $this->resetPage();
         $this->dispatch('filters-reset');
     }
@@ -171,18 +167,18 @@ new #[Title('بيانات العملاء')] class extends Component
     public function deleteCustomer()
     {
         if ($this->customerToDelete) {
-            Customer::find($this->customerToDelete)?->delete(); // Soft Delete
+            Customer::find($this->customerToDelete)?->delete();
             $this->showDeleteModal = false;
             $this->customerToDelete = null;
             $this->dispatch('notify', type: 'warning', message: 'تم حذف العميل بنجاح.');
-            unset($this->customers);
+            unset($this->customersList);
         }
     }
 
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selectedIds = $this->customers->pluck('id')->map(fn($id) => (string)$id)->toArray();
+            $this->selectedIds = $this->customersList->pluck('id')->map(fn($id) => (string)$id)->toArray();
         } else {
             $this->selectedIds = [];
         }
@@ -190,11 +186,11 @@ new #[Title('بيانات العملاء')] class extends Component
 
     public function deleteMultiple()
     {
-        Customer::whereIn('id', $this->selectedIds)->delete(); // Soft Delete
+        Customer::whereIn('id', $this->selectedIds)->delete();
         $this->selectedIds = [];
         $this->selectAll = false;
         $this->dispatch('notify', type: 'warning', message: 'تم حذف العملاء المحددين بنجاح.');
-        unset($this->customers);
+        unset($this->customersList);
     }
 
     // ===== إضافة عميل جديد =====
@@ -203,14 +199,14 @@ new #[Title('بيانات العملاء')] class extends Component
         $this->form->store();
         $this->dispatch('close-modal');
         $this->dispatch('notify', type: 'success', message: 'تم إضافة العميل بنجاح.');
-        unset($this->customers);
+        unset($this->customersList);
     }
 
     // ===== تحضير فورم التعديل =====
     public function editCustomer(Customer $customer): void
     {
         $this->form->setCustomer($customer);
-        // يتم فتح المودل عبر AlpineJS من الـ blade عند رجوع الـ Promise
+        $this->dispatch('open-modal');
     }
 
     // ===== تحديث عميل موجود =====
@@ -219,7 +215,7 @@ new #[Title('بيانات العملاء')] class extends Component
         $this->form->update();
         $this->dispatch('close-modal');
         $this->dispatch('notify', type: 'info', message: 'تم تحديث بيانات العميل بنجاح.');
-        unset($this->customers);
+        unset($this->customersList);
     }
 
     // ===== دالة موحّدة (إضافة أو تعديل) — مستخدَمة في wire:submit =====
@@ -236,6 +232,7 @@ new #[Title('بيانات العملاء')] class extends Component
     public function cancel(): void
     {
         $this->form->reset();
+        $this->resetPage();
         $this->resetValidation();
     }
 };

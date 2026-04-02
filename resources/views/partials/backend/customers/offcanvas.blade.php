@@ -48,9 +48,9 @@
                 <label for="country-select" class="form-label text-muted text-uppercase fw-semibold mb-3">الدولة</label>
                 <select x-ref="select" class="form-control" id="country-select" multiple>
                     <option value="">اختر الدولة</option>
-                    @foreach($this->countries as $country)
-                    @if(!empty($country))
-                    <option value="{{ $country }}">{{ $country }}</option>
+                    @foreach($this->countries as $id => $name)
+                    @if(!empty($name))
+                    <option value="{{ $id }}">{{ $name }}</option>
                     @endif
                     @endforeach
                 </select>
