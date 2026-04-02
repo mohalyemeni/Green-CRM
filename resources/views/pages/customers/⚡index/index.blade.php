@@ -1,34 +1,32 @@
 <div x-data="{
-    selectedIds: @entangle('selectedIds'),
-    sortField: @entangle('sortField'),
-    sortDirection: @entangle('sortDirection'),
-    showModal: false,
-    showDeleteModal: false,
-    showOffcanvas: false,
-    sortBy(field) {
-        $wire.sortBy(field);
-    },
-    toggleAll() {
-        let checkboxes = document.querySelectorAll('input[name=chk_child]');
-        if (this.selectedIds.length < checkboxes.length) {
-            this.selectedIds = Array.from(checkboxes).map(el => el.value);
-        } else {
-            this.selectedIds = [];
+        selectedIds: @entangle('selectedIds'),
+        sortField: @entangle('sortField'),
+        sortDirection: @entangle('sortDirection'),
+        showModal: false,
+        showDeleteModal: false,
+        showOffcanvas: false,
+        sortBy(field) {
+            $wire.sortBy(field);
+        },
+        toggleAll() {
+            let checkboxes = document.querySelectorAll('input[name=chk_child]');
+            if (this.selectedIds.length < checkboxes.length) {
+                this.selectedIds = Array.from(checkboxes).map(el => el.value);
+            } else {
+                this.selectedIds = [];
+            }
         }
-    }
-}"
+    }"
     x-on:open-customer-modal.window="showModal = true"
     x-on:close-customer-modal.window="showModal = false; $wire.cancel()"
     x-on:open-delete-modal.window="showDeleteModal = true"
     x-on:close-delete-modal.window="showDeleteModal = false"
     x-on:close-offcanvas.window="showOffcanvas = false">
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
+
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header border-0">
-
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-6">
                             <div class="search-box position-relative" x-data="{ search: @entangle('search') }">
@@ -67,8 +65,12 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-info" @click="showOffcanvas = true"><i class="ri-filter-3-line align-bottom me-1"></i> تصفية</button>
-                                    <button type="button" class="btn btn-success add-btn" @click="$wire.cancel(); showModal = true" id="create-btn"><i class="ri-add-line align-bottom me-1"></i> إضافة عميل</button>
+                                    <button type="button" class="btn btn-info" @click="showOffcanvas = true">
+                                        <i class="ri-filter-3-line align-bottom me-1"></i> تصفية
+                                    </button>
+                                    <button type="button" class="btn btn-success add-btn" @click="$wire.cancel(); showModal = true" id="create-btn">
+                                        <i class="ri-add-line align-bottom me-1"></i> إضافة عميل
+                                    </button>
                                     <span class="dropdown">
                                         <button class="btn btn-soft-info btn-icon fs-14" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="ri-settings-4-line"></i>
@@ -93,20 +95,18 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="card" id="leadsList">
+            <div class="card" id="customersList">
                 <div class="card-header border-0">
-
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-10">
                             <h5 class="card-title mb-0">إدارة بيانات العملاء</h5>
-                            <p><small>عرض وإدارة جميع بيانات العملاء المسجلين في النظام.</small></p>
+                            <p class="text-muted mb-0"><small>عرض وإدارة جميع بيانات العملاء المسجلين في النظام.</small></p>
                         </div>
 
                         <div class="col-sm-auto ms-auto">
                             <div class="d-flex align-items-center gap-2" wire:ignore>
                                 <span class="text-muted">عرض: </span>
-                                <select class="form-control mb-0"
-                                    wire:model.live="perPage">
+                                <select class="form-control mb-0" wire:model.live="perPage">
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="50">50</option>
@@ -117,11 +117,12 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="card-body">
                     <div>
                         <div class="table-responsive table-card mb-3">
                             <table class="table align-middle table-nowrap mb-0" id="customerTable">
-                                <thead class="table-light">
+                                <thead class="table-light text-muted">
                                     <tr>
                                         <th scope="col" style="width: 50px;">
                                             <div class="form-check">
@@ -130,7 +131,9 @@
                                                     :checked="selectedIds.length > 0 && selectedIds.length === document.querySelectorAll('input[name=chk_child]').length">
                                             </div>
                                         </th>
+
                                         <th>الإجراءات</th>
+
                                         <th @click="sortBy('customer_number')" style="cursor: pointer; user-select: none;">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span>المعرف</span>
@@ -140,7 +143,8 @@
                                                     </template>
                                                     <template x-if="sortField === 'customer_number'">
                                                         <span>
-                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
                                                         </span>
                                                     </template>
                                                 </span>
@@ -156,7 +160,8 @@
                                                     </template>
                                                     <template x-if="sortField === 'name'">
                                                         <span>
-                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
                                                         </span>
                                                     </template>
                                                 </span>
@@ -172,12 +177,14 @@
                                                     </template>
                                                     <template x-if="sortField === 'country'">
                                                         <span>
-                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
                                                         </span>
                                                     </template>
                                                 </span>
                                             </div>
                                         </th>
+
                                         <th @click="sortBy('email')" style="cursor: pointer; user-select: none;">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span>الايميل</span>
@@ -187,13 +194,31 @@
                                                     </template>
                                                     <template x-if="sortField === 'email'">
                                                         <span>
-                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
                                                         </span>
                                                     </template>
                                                 </span>
                                             </div>
                                         </th>
-                                        <th>رقم الهاتف</th>
+
+                                        <th @click="sortBy('mobile')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>رقم الهاتف</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'mobile'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'mobile'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
+
                                         <th @click="sortBy('status')" style="cursor: pointer; user-select: none;">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span>الحالة</span>
@@ -203,14 +228,30 @@
                                                     </template>
                                                     <template x-if="sortField === 'status'">
                                                         <span>
-                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span><span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
                                                         </span>
                                                     </template>
                                                 </span>
                                             </div>
                                         </th>
-                                        <th>انشئ في</th>
 
+                                        <th @click="sortBy('created_at')" style="cursor: pointer; user-select: none;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>انشئ في</span>
+                                                <span class="fs-11 ms-1" style="width: 20px; display: inline-block; text-align: center;">
+                                                    <template x-if="sortField !== 'created_at'">
+                                                        <span class="text-muted opacity-50">↑↓</span>
+                                                    </template>
+                                                    <template x-if="sortField === 'created_at'">
+                                                        <span>
+                                                            <span :class="sortDirection === 'asc' ? 'text-primary' : 'text-muted opacity-50'">↑</span>
+                                                            <span :class="sortDirection === 'desc' ? 'text-primary' : 'text-muted opacity-50'">↓</span>
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
@@ -226,7 +267,9 @@
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                    <a class="edit-item-btn" href="javascript:void(0);" @click="$wire.editCustomer({{ $customer->id }}).then(() => showModal = true)"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                    <a class="edit-item-btn" href="javascript:void(0);" @click="$wire.editCustomer({{ $customer->id }}).then(() => showModal = true)">
+                                                        <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                                    </a>
                                                 </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
                                                     <a class="remove-item-btn" href="javascript:void(0);" @click="$wire.confirmDelete({{ $customer->id }}).then(() => showDeleteModal = true)">
@@ -246,22 +289,45 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        <td class="customer_number"><a href="javascript:void(0);" class="fw-medium link-primary">{{ $customer->customer_number }}</a></td>
-                                        <td class="name">{{$customer->name}}</td>
-                                        <td class="country">{{$customer->country}}</td>
-                                        <td class="email">{{$customer->email}}</td>
-                                        <td class="phone">{{$customer->mobile}}</td>
-                                        <td class="status"><span class="badge bg-{{ $customer->status->color() }}-subtle text-{{ $customer->status->color() }} text-uppercase"><small>{{ $customer->status->label() }}</small></span></td>
-                                        <td class="created_at">{{ $customer->created_at->diffForHumans() }}</td>
+                                        <td class="customer_number">
+                                            <a href="javascript:void(0);" class="fw-medium link-primary">{{ $customer->customer_number }}</a>
+                                        </td>
+                                        <td class="name">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-xxs flex-shrink-0 me-2">
+                                                    <span class="avatar-title rounded-circle fs-10" style="background-color: {{ optional($customer->status)->color() }}"></span>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fs-14 my-1 fw-medium">{{ $customer->name }}</h5>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="country">{{ $customer->country ?? '-' }}</td>
+                                        <td class="email">{{ $customer->email ?? '-' }}</td>
+                                        <td class="phone">{{ $customer->mobile }}</td>
 
+                                        {{-- ===== زر التفعيل / الإلغاء (التعديل الجديد) ===== --}}
+                                        <td class="status">
+                                            <div class="form-check form-switch form-switch-success form-switch-md mb-0" dir="ltr" style="display: flex; justify-content: flex-end; align-items: center;">
+                                                <input class="form-check-input me-2" type="checkbox" role="switch"
+                                                    id="statusSwitch_{{ $customer->id }}"
+                                                    wire:click="toggleStatus({{ $customer->id }})"
+                                                    @if(optional($customer->status)->value === 1) checked @endif>
+                                                <label class="form-check-label mb-0 text-{{ optional($customer->status)->color() }}" for="statusSwitch_{{ $customer->id }}" dir="rtl" style="min-width: 60px;">
+                                                    <small class="fw-semibold">{{ optional($customer->status)->label() }}</small>
+                                                </label>
+                                            </div>
+                                        </td>
+
+                                        <td class="created_at">{{ optional($customer->created_at)->diffForHumans() }}</td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8">
-                                            <div class="noresult">
+                                        <td colspan="9">
+                                            <div class="noresult py-5">
                                                 <div class="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
-                                                    <h5 class="mt-2">عذراً! لم يتم العثور على نتائج</h5>
+                                                    <i class="ri-search-line display-5 text-success mb-3 d-block"></i>
+                                                    <h5 class="mt-2 fw-bold text-dark">عذراً! لم يتم العثور على نتائج</h5>
                                                     <p class="text-muted mb-0">لقد بحثنا في أكثر من 150 عميل محتمل، ولم نعثر على أي نتائج مطابقة لبحثك.</p>
                                                 </div>
                                             </div>
@@ -270,6 +336,7 @@
                                     @endforelse
                                 </tbody>
                             </table>
+
                             {{$this->customers->links('livewire::custom-pagination-links')}}
 
                             <div wire:ignore.self
@@ -286,233 +353,180 @@
                                 x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="opacity-100"
                                 x-transition:leave-end="opacity-0">
+
                                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-light p-3">
-                                            <h5 class="modal-title" id="exampleModalLabel">
+                                    <div class="modal-content border-0 overflow-hidden">
+                                        <div class="modal-header bg-light p-3 border-bottom">
+                                            <h5 class="modal-title d-flex align-items-center" id="exampleModalLabel">
                                                 @if($form->customer)
-                                                <i class="ri-edit-line me-2 text-warning"></i> تعديل بيانات العميل
+                                                <i class="ri-edit-line me-2 text-warning fs-20"></i> تعديل بيانات العميل
                                                 @else
-                                                <i class="ri-user-add-line me-2 text-success"></i> إضافة عميل جديد
+                                                <i class="ri-user-add-line me-2 text-primary fs-20"></i> إضافة عميل جديد
                                                 @endif
                                             </h5>
                                             <button type="button" class="btn-close" aria-label="Close" @click="showModal = false; $wire.cancel()"></button>
                                         </div>
+
                                         <form wire:submit.prevent="submitCustomer" autocomplete="off">
-                                            <div class="modal-body">
-                                                <div class="row g-3">
+                                            <div class="modal-body p-4">
 
-                                                    {{-- ===== قسم: البيانات الأساسية ===== --}}
-                                                    <div class="col-12">
-                                                        <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
-                                                            <i class="ri-user-line me-1"></i> البيانات الأساسية
-                                                        </h6>
-                                                    </div>
-
-                                                    {{-- الاسم --}}
-                                                    <div class="col-lg-6">
-                                                        <label for="form-name" class="form-label">اسم العميل <span class="text-danger">*</span></label>
-                                                        <input type="text" id="form-name" class="form-control @error('form.name') is-invalid @enderror"
-                                                            wire:model="form.name"
-                                                            placeholder="أدخل اسم العميل كاملاً" />
-                                                        @error('form.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- الهوية الوطنية --}}
-                                                    <div class="col-lg-6">
-                                                        <label for="form-national_id" class="form-label">الهوية الوطنية</label>
-                                                        <input type="text" id="form-national_id" class="form-control @error('form.national_id') is-invalid @enderror"
-                                                            wire:model="form.national_id"
-                                                            placeholder="أدخل رقم الهوية الوطنية" />
-                                                        @error('form.national_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- العمر --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-age" class="form-label">العمر</label>
-                                                        <input type="number" id="form-age" class="form-control @error('form.age') is-invalid @enderror"
-                                                            wire:model="form.age"
-                                                            min="1" max="120" placeholder="العمر" />
-                                                        @error('form.age') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- الجنس --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-gender" class="form-label">الجنس</label>
-                                                        <select id="form-gender" class="form-select @error('form.gender') is-invalid @enderror"
-                                                            wire:model="form.gender">
-                                                            <option value="">-- اختر الجنس --</option>
-                                                            <option value="1">ذكر</option>
-                                                            <option value="2">أنثى</option>
-                                                        </select>
-                                                        @error('form.gender') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- الحالة --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-status" class="form-label">الحالة <span class="text-danger">*</span></label>
-                                                        <select id="form-status" class="form-select @error('form.status') is-invalid @enderror"
-                                                            wire:model="form.status">
-                                                            <option value="1">مفعل</option>
-                                                            <option value="2">غير مفعل</option>
-                                                            <option value="3">موقوف مؤقتاً</option>
-                                                        </select>
-                                                        @error('form.status') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- ===== قسم: بيانات التواصل ===== --}}
-                                                    <div class="col-12 mt-2">
-                                                        <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
-                                                            <i class="ri-phone-line me-1"></i> بيانات التواصل
-                                                        </h6>
-                                                    </div>
-
-                                                    {{-- الجوال --}}
-                                                    <div class="col-lg-6">
-                                                        <label for="form-mobile" class="form-label">رقم الجوال</label>
-                                                        <input type="tel" id="form-mobile" class="form-control @error('form.mobile') is-invalid @enderror"
-                                                            wire:model="form.mobile"
-                                                            placeholder="05XXXXXXXX" />
-                                                        @error('form.mobile') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- البريد الإلكتروني --}}
-                                                    <div class="col-lg-6">
-                                                        <label for="form-email" class="form-label">البريد الإلكتروني</label>
-                                                        <input type="email" id="form-email" class="form-control @error('form.email') is-invalid @enderror"
-                                                            wire:model="form.email"
-                                                            placeholder="example@domain.com" />
-                                                        @error('form.email') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- ===== قسم: بيانات العنوان ===== --}}
-                                                    <div class="col-12 mt-2">
-                                                        <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
-                                                            <i class="ri-map-pin-line me-1"></i> بيانات العنوان
-                                                        </h6>
-                                                    </div>
-
-                                                    {{-- العنوان العام --}}
-                                                    <div class="col-12">
-                                                        <label for="form-general_address" class="form-label">العنوان العام</label>
-                                                        <input type="text" id="form-general_address" class="form-control @error('form.general_address') is-invalid @enderror"
-                                                            wire:model="form.general_address"
-                                                            placeholder="أدخل العنوان العام" />
-                                                        @error('form.general_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- رقم المبنى --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-building_number" class="form-label">رقم المبنى</label>
-                                                        <input type="text" id="form-building_number" class="form-control @error('form.building_number') is-invalid @enderror"
-                                                            wire:model="form.building_number"
-                                                            placeholder="رقم المبنى" />
-                                                        @error('form.building_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- اسم الشارع --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-street_name" class="form-label">اسم الشارع</label>
-                                                        <input type="text" id="form-street_name" class="form-control @error('form.street_name') is-invalid @enderror"
-                                                            wire:model="form.street_name"
-                                                            placeholder="اسم الشارع" />
-                                                        @error('form.street_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- الحي --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-district" class="form-label">الحي</label>
-                                                        <input type="text" id="form-district" class="form-control @error('form.district') is-invalid @enderror"
-                                                            wire:model="form.district"
-                                                            placeholder="اسم الحي" />
-                                                        @error('form.district') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- المدينة --}}
-                                                    <div class="col-lg-6">
-                                                        <label for="form-city" class="form-label">المدينة</label>
-                                                        <input type="text" id="form-city" class="form-control @error('form.city') is-invalid @enderror"
-                                                            wire:model="form.city"
-                                                            placeholder="المدينة" />
-                                                        @error('form.city') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- الدولة --}}
-                                                    <div class="col-lg-6">
-                                                        <label for="form-country" class="form-label">الدولة</label>
-                                                        <input type="text" id="form-country" class="form-control @error('form.country') is-invalid @enderror"
-                                                            wire:model="form.country"
-                                                            placeholder="الدولة" />
-                                                        @error('form.country') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- ===== قسم: البيانات المالية والتجارية ===== --}}
-                                                    <div class="col-12 mt-2">
-                                                        <h6 class="text-muted text-uppercase fw-semibold mb-2 pb-1 border-bottom">
-                                                            <i class="ri-money-dollar-circle-line me-1"></i> البيانات المالية
-                                                        </h6>
-                                                    </div>
-
-                                                    {{-- الرقم الضريبي --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-tax_number" class="form-label">الرقم الضريبي</label>
-                                                        <input type="text" id="form-tax_number" class="form-control @error('form.tax_number') is-invalid @enderror"
-                                                            wire:model="form.tax_number"
-                                                            placeholder="الرقم الضريبي" />
-                                                        @error('form.tax_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- طريقة التعامل --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-dealing_method" class="form-label">طريقة التعامل</label>
-                                                        <select id="form-dealing_method" class="form-select @error('form.dealing_method') is-invalid @enderror"
-                                                            wire:model="form.dealing_method">
-                                                            <option value="">-- اختر الطريقة --</option>
-                                                            <option value="cash">كاش</option>
-                                                            <option value="credit">آجل</option>
-                                                        </select>
-                                                        @error('form.dealing_method') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                                    </div>
-
-                                                    {{-- حد الدين --}}
-                                                    <div class="col-lg-4">
-                                                        <label for="form-credit_limit" class="form-label">حد الدين</label>
-                                                        <div class="input-group">
-                                                            <input type="number" id="form-credit_limit" class="form-control @error('form.credit_limit') is-invalid @enderror"
-                                                                wire:model="form.credit_limit"
-                                                                min="0" step="0.01" placeholder="0.00" />
-                                                            <span class="input-group-text">ر.س</span>
+                                                <div class="mb-4">
+                                                    <h6 class="fs-14 fw-bold text-muted mb-3 border-bottom pb-2">
+                                                        <i class="ri-information-line me-1 align-bottom"></i> البيانات الأساسية
+                                                    </h6>
+                                                    <div class="row g-3">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label fw-medium">
+                                                                رقم العميل
+                                                                <span class="text-muted fs-11 fw-normal">(اختياري - يُولَّد تلقائياً)</span>
+                                                            </label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-light"><i class="ri-hashtag"></i></span>
+                                                                <input type="text"
+                                                                    class="form-control @error('form.customer_number') is-invalid @enderror"
+                                                                    wire:model.blur="form.customer_number"
+                                                                    placeholder="مثال: CUST-001 (أو اتركه فارغاً)"
+                                                                    @if(!$form->customer) dir="ltr" @endif />
+                                                                @error('form.customer_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            </div>
+                                                            @if(!$form->customer)
+                                                            <div class="form-text text-muted"><i class="ri-information-line"></i> إذا تُرك فارغاً سيتم توليده تلقائياً</div>
+                                                            @endif
                                                         </div>
-                                                        @error('form.credit_limit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label fw-medium">اسم العميل <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control @error('form.name') is-invalid @enderror" wire:model.blur="form.name" placeholder="الاسم الكامل" />
+                                                            @error('form.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label fw-medium">الجنس</label>
+                                                            <select class="form-select @error('form.gender') is-invalid @enderror" wire:model.blur="form.gender">
+                                                                <option value="">اختر الجنس</option>
+                                                                <option value="1">ذكر</option>
+                                                                <option value="2">أنثى</option>
+                                                            </select>
+                                                            @error('form.gender') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label fw-medium">حالة التفعيل <span class="text-danger">*</span></label>
+                                                            <select class="form-select @error('form.status') is-invalid @enderror" wire:model.blur="form.status">
+                                                                <option value="1">مفعّل</option>
+                                                                <option value="2">غير مفعّل</option>
+                                                                <option value="3">معلّق</option>
+                                                            </select>
+                                                            @error('form.status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
                                                     </div>
+                                                </div>
 
-                                                    {{-- ===== الملاحظات ===== --}}
-                                                    <div class="col-12 mt-1">
-                                                        <label for="form-notes" class="form-label">ملاحظات</label>
-                                                        <textarea id="form-notes" class="form-control @error('form.notes') is-invalid @enderror"
-                                                            wire:model="form.notes"
-                                                            rows="3" placeholder="أي ملاحظات إضافية على العميل..."></textarea>
-                                                        @error('form.notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                <div class="mb-4 bg-light p-3 rounded-3 border">
+                                                    <h6 class="fs-14 fw-bold text-muted mb-3">
+                                                        <i class="ri-contacts-book-2-line me-1 align-bottom"></i> معلومات التواصل
+                                                    </h6>
+                                                    <div class="row g-3">
+                                                        <div class="col-lg-4">
+                                                            <label class="form-label fw-medium">رقم الموبايل <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control @error('form.mobile') is-invalid @enderror" wire:model.blur="form.mobile" dir="ltr" placeholder="05XXXXXXXX" />
+                                                            @error('form.mobile') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <label class="form-label fw-medium">رقم الهاتف</label>
+                                                            <input type="text" class="form-control @error('form.phone') is-invalid @enderror" wire:model.blur="form.phone" dir="ltr" placeholder="رقم الهاتف" />
+                                                            @error('form.phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <label class="form-label fw-medium">رقم الوتس</label>
+                                                            <input type="text" class="form-control @error('form.whatsapp') is-invalid @enderror" wire:model.blur="form.whatsapp" dir="ltr" placeholder="رقم الواتس" />
+                                                            @error('form.whatsapp') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label fw-medium">البريد الإلكتروني</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-end-0"><i class="ri-mail-line"></i></span>
+                                                                <input type="email" class="form-control border-start-0 @error('form.email') is-invalid @enderror" wire:model.blur="form.email" dir="ltr" placeholder="example@domain.com" />
+                                                                @error('form.email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                </div>
 
-                                                </div>{{-- end row --}}
-                                            </div>{{-- end modal-body --}}
+                                                <div>
+                                                    <h6 class="fs-14 fw-bold text-muted mb-3 border-bottom pb-2">
+                                                        <i class="ri-map-pin-line me-1 align-bottom"></i> بيانات العنوان
+                                                    </h6>
+                                                    <div class="row g-3">
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label fw-medium">العنوان العام</label>
+                                                            <input type="text" class="form-control @error('form.general_address') is-invalid @enderror" wire:model.blur="form.general_address" placeholder="المدينة، الحي، الشارع..." />
+                                                            @error('form.general_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
 
-                                            <div class="modal-footer">
-                                                <div class="hstack gap-2 justify-content-end">
-                                                    <button type="button" class="btn btn-light" @click="showModal = false; $wire.cancel()">
-                                                        <i class="ri-close-line me-1"></i> إلغاء
+                                                        <div class="col-lg-4">
+                                                            <label class="form-label fw-medium">الحي</label>
+                                                            <input type="text" class="form-control @error('form.district') is-invalid @enderror" wire:model.blur="form.district" placeholder="اسم الحي" />
+                                                            @error('form.district') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <label class="form-label fw-medium">اسم الشارع</label>
+                                                            <input type="text" class="form-control @error('form.street_name') is-invalid @enderror" wire:model.blur="form.street_name" placeholder="اسم الشارع" />
+                                                            @error('form.street_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <label class="form-label fw-medium">رقم المبنى</label>
+                                                            <input type="text" class="form-control @error('form.building_number') is-invalid @enderror" wire:model.blur="form.building_number" placeholder="رقم المبنى" />
+                                                            @error('form.building_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label fw-medium">المدينة</label>
+                                                            <input type="text" class="form-control @error('form.city') is-invalid @enderror" wire:model.blur="form.city" placeholder="المدينة" />
+                                                            @error('form.city') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label fw-medium">الدولة</label>
+                                                            <select class="form-control @error('form.country') is-invalid @enderror" wire:model.blur="form.country">
+                                                                <option value="">كل الدول</option>
+                                                                @foreach($this->countries() as $country)
+                                                                <option value="{{ $country }}">{{ $country }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('form.country') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+
+                                                        <div class="col-12 mt-3">
+                                                            <label class="form-label fw-medium">ملاحظات</label>
+                                                            <textarea class="form-control @error('form.notes') is-invalid @enderror" wire:model="form.notes" rows="2" placeholder="أضف أي ملاحظات إضافية هنا..."></textarea>
+                                                            @error('form.notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer bg-light border-top mt-3">
+                                                <div class="hstack gap-2 justify-content-end w-100">
+                                                    <button type="button" class="btn btn-ghost-danger" @click="showModal = false; $wire.cancel()">
+                                                        <i class="ri-close-line align-bottom me-1"></i> إلغاء
                                                     </button>
-                                                    <button type="submit" class="btn btn-success" wire:loading.attr="disabled">
-                                                        <span wire:loading.remove wire:target="saveCustomer,updateCustomer">
+                                                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="submitCustomer">
+                                                        <span wire:loading.remove wire:target="submitCustomer">
                                                             @if($form->customer)
-                                                            <i class="ri-save-line me-1"></i> تحديث البيانات
+                                                            <i class="ri-save-3-line align-bottom me-1"></i> تحديث البيانات
                                                             @else
-                                                            <i class="ri-save-line me-1"></i> حفظ العميل
+                                                            <i class="ri-save-3-line align-bottom me-1"></i> حفظ بيانات العميل
                                                             @endif
                                                         </span>
-                                                        <span wire:loading wire:target="saveCustomer,updateCustomer">
-                                                            <span class="spinner-border spinner-border-sm me-1" role="status"></span> جاري الحفظ...
+                                                        <span wire:loading wire:target="submitCustomer">
+                                                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> جاري الحفظ...
                                                         </span>
                                                     </button>
                                                 </div>
@@ -521,9 +535,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--end modal-->
-
-                            <!-- Delete Confirmation Modal -->
                             <div wire:ignore.self
                                 id="deleteRecordModal"
                                 class="modal fade zoomIn"
@@ -532,6 +543,7 @@
                                 x-show="showDeleteModal"
                                 :class="{ 'show d-block': showDeleteModal }"
                                 :aria-hidden="!showDeleteModal">
+
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -555,27 +567,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--end delete modal-->
-
-
                             @include('partials.backend.customers.offcanvas')
 
                         </div>
                     </div>
-
                 </div>
-                <!--end col-->
             </div>
         </div>
 
-        {{-- Customer Form Modal Backdrop --}}
-        <div class="modal-backdrop fade show" x-show="showModal" style="display:none;"></div>
+        <div class="modal-backdrop"
+            style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"
+            x-show="showModal"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0">
+        </div>
 
-        {{-- Delete Confirmation Modal Backdrop --}}
-        <div class="modal-backdrop fade show" x-show="showDeleteModal" style="display:none;"></div>
+        <div class="modal-backdrop"
+            style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"
+            x-show="showDeleteModal"
+            x-transition.opacity>
+        </div>
 
-        {{-- Offcanvas Backdrop --}}
-        <div class="offcanvas-backdrop fade show" x-show="showOffcanvas" x-transition.opacity @click="showOffcanvas = false" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"></div>
+        <div class="offcanvas-backdrop"
+            style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"
+            x-show="showOffcanvas"
+            x-transition.opacity
+            @click="showOffcanvas = false">
+        </div>
+
     </div>
 
     @push('scripts')
@@ -615,9 +638,7 @@
             Livewire.on('close-modal', () => {
                 window.dispatchEvent(new CustomEvent('close-customer-modal'));
             });
-
-            // Close offcanvas is now handled by Alpine `x-on:close-offcanvas.window`
-
         });
     </script>
     @endpush
+</div>

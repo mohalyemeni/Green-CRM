@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Forms\BranchesForm; // استخدام فورم الفروع
 use App\Models\Branch;
 use App\Enums\ActiveStatus;
+use App\Models\Country;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -62,40 +63,43 @@ new #[Title('بيانات الفروع')] class extends Component
     #[Computed]
     public function branchesList()
     {
-        // 1. حماية أمنية: تحديد الحقول المسموح بالترتيب بناءً عليها في الفروع
+        // 1. حماية أمنية: تحديد الحقول المسموح بالترتيب
         $validSortFields = ['code', 'name', 'name_en', 'commercial_register', 'company_id', 'created_at'];
         $sortField = in_array($this->sortField, $validSortFields) ? $this->sortField : 'created_at';
 
         return Branch::query()
-            // 2. تحسين الأداء: جلب العلاقات المرتبطة (الشركة، الدولة، العملة، المستخدمين)
+            // 2. تحسين الأداء: Eager Loading
             ->with(['company', 'country', 'currency', 'creator', 'editor'])
 
-            // 3. البحث الذكي (يستخدم SearchableTrait الموجود في مودل Branch)
+            // 3. البحث الذكي
             ->when($this->search, fn($q) => $q->search('%' . $this->search . '%'))
 
-            // 4. معالجة الفلاتر
-            ->when($this->status !== '', function ($q) {
-                return $q->where('status', $this->status);
-            })
-            ->when(!empty($this->selectedStatuses), function ($q) {
-                return $q->whereIn('status', $this->selectedStatuses);
-            })
-            ->when(!empty($this->selectedCompanies), function ($q) {
-                return $q->whereIn('company_id', $this->selectedCompanies);
-            })
-            ->when(!empty($this->selectedCountries), function ($q) {
-                return $q->whereIn('country_id', $this->selectedCountries);
-            })
+            // 4. فلترة الحالة (مع Type Casting للأمان)
+            ->when($this->status !== '', fn($q) => $q->where('status', (int) $this->status))
+            ->when(!empty($this->selectedStatuses), fn($q) => $q->whereIn('status', $this->selectedStatuses))
 
-            // 5. Filter By Dates (Offcanvas)
-            ->when($this->created_from, fn($q) => $q->whereDate('branches.created_at', '>=', $this->created_from))
-            ->when($this->created_to, fn($q) => $q->whereDate('branches.created_at', '<=', $this->created_to))
+            // 5. فلترة الشركات والدول
+            ->when(!empty($this->selectedCompanies), fn($q) => $q->whereIn('company_id', $this->selectedCompanies))
+            ->when(!empty($this->selectedCountries), fn($q) => $q->whereIn('country_id', $this->selectedCountries))
 
-            // 6. الترتيب
+            // 6. Filter By Dates
+            ->when($this->created_from, fn($q) => $q->whereDate('created_at', '>=', $this->created_from))
+            ->when($this->created_to, fn($q) => $q->whereDate('created_at', '<=', $this->created_to))
+
+            // 7. الترتيب
             ->orderBy($sortField, $this->sortDirection)
 
-            // 7. الترقيم
+            // 8. الترقيم
             ->paginate($this->perPage);
+    }
+
+    #[Computed]
+    public function countries()
+    {
+        return Country::where('status', ActiveStatus::ACTIVE)
+            ->whereNotNull('name')
+            ->pluck('name', 'id')
+            ->sort();
     }
 
     public function toggleStatus($branchId)

@@ -1,6 +1,9 @@
 <?php
 
+use App\Enums\ActiveStatus;
+use App\Enums\CustomerStatus;
 use App\Livewire\Forms\CustomerForm;
+use App\Models\Country;
 use App\Models\Customer;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,10 +17,11 @@ new #[Title('بيانات العملاء')] class extends Component
     use WithPagination, WithFileUploads, WithoutUrlPagination;
 
     protected $paginationTheme = 'bootstrap';
+
     // Filters
     public $search = '';
-    public $country = ''; // For generic simple filter if any
-    public $status = '';  // For generic simple filter if any
+    public $country = '';
+    public $status = '';
     public $created_at = '';
 
     // Offcanvas filters
@@ -45,42 +49,38 @@ new #[Title('بيانات العملاء')] class extends Component
 
     // Query string for URL persistence
     protected $queryString = [
-        'search'        => ['except' => ''],
-        'country'       => ['except' => ''],
-        'status'        => ['except' => ''],
-        'created_from'  => ['except' => ''],
-        'created_to'    => ['except' => ''],
+        'search'            => ['except' => ''],
+        'country'           => ['except' => ''],
+        'status'            => ['except' => ''],
+        'created_from'      => ['except' => ''],
+        'created_to'        => ['except' => ''],
         'selectedCountries' => ['except' => []],
         'selectedStatuses'  => ['except' => []],
-        'sortField'     => ['except' => 'created_at'],
-        'sortDirection' => ['except' => 'desc'],
+        'sortField'         => ['except' => 'created_at'],
+        'sortDirection'     => ['except' => 'desc'],
     ];
 
     #[Computed]
     public function customers()
     {
-        // 1. حماية أمنية: تحديد الحقول المسموح بالترتيب بناءً عليها
-        $validSortFields = ['name', 'customer_number', 'created_at', 'city', 'country'];
+        // 1. حماية أمنية: تحديد الحقول المسموح بالترتيب بناءً عليها متوافقة مع الواجهة والجدول
+        $validSortFields = ['customer_number', 'name', 'country', 'email', 'mobile', 'phone', 'status', 'created_at'];
         $sortField = in_array($this->sortField, $validSortFields) ? $this->sortField : 'created_at';
 
         return Customer::query()
             // 2. تحسين الأداء: جلب بيانات المستخدمين المرتبطين دفعة واحدة (Eager Loading)
             ->with(['creator', 'editor'])
 
-            // 3. البحث الذكي (يحتوي على ترتيب داخلي حسب الأهمية)
+            // 3. البحث الذكي (يحتوي على ترتيب داخلي حسب الأهمية باستخدام SearchableTrait)
             ->when($this->search, fn($q) => $q->search('%' . $this->search . '%'))
 
-            // 4. الفلترة حسب الدولة (Single string from past + Array matching from offcanvas)
+            // 4. الفلترة حسب الدولة 
             ->when($this->country, fn($q) => $q->where('country', 'LIKE', '%' . $this->country . '%'))
             ->when(!empty($this->selectedCountries), fn($q) => $q->whereIn('country', $this->selectedCountries))
 
-            // 5. معالجة الحالة (Single status + Multiple from Offcanvas)
-            ->when($this->status !== '', function ($q) {
-                return $q->where('status', $this->status == 1);
-            })
-            ->when(!empty($this->selectedStatuses), function ($q) {
-                return $q->whereIn('status', $this->selectedStatuses);
-            })
+            // 5. معالجة الحالة (تتوافق مع CustomerStatus Enum كرقم Integer)
+            ->when($this->status !== '', fn($q) => $q->where('status', (int) $this->status))
+            ->when(!empty($this->selectedStatuses), fn($q) => $q->whereIn('status', $this->selectedStatuses))
 
             // Filter By Dates (Offcanvas)
             ->when($this->created_from, fn($q) => $q->whereDate('created_at', '>=', $this->created_from))
@@ -96,9 +96,24 @@ new #[Title('بيانات العملاء')] class extends Component
     #[Computed]
     public function countries()
     {
-        return Customer::distinct('country')
-            ->pluck('country')
+        return Country::where('status', ActiveStatus::ACTIVE)
+            ->whereNotNull('name')
+            ->pluck('name', 'id')
             ->sort();
+    }
+
+    public function toggleStatus($customerId)
+    {
+        $customer = Customer::findOrFail($customerId);
+
+        $customer->status = $customer->status === CustomerStatus::ACTIVE
+            ? CustomerStatus::INACTIVE
+            : CustomerStatus::ACTIVE;
+
+        $customer->save();
+
+        $this->dispatch('notify', type: 'info', message: 'تم تغيير حالة العميل بنجاح.');
+        unset($this->customers);
     }
 
     public function sortBy($field)
@@ -118,7 +133,7 @@ new #[Title('بيانات العملاء')] class extends Component
         $this->resetPage();
     }
 
-    public function updatedDepartment()
+    public function updatedCountry() // تم تغييرها من updatedDepartment لتتوافق مع حقول الجدول
     {
         $this->resetPage();
     }
@@ -156,7 +171,7 @@ new #[Title('بيانات العملاء')] class extends Component
     public function deleteCustomer()
     {
         if ($this->customerToDelete) {
-            Customer::find($this->customerToDelete)->delete();
+            Customer::find($this->customerToDelete)?->delete(); // Soft Delete
             $this->showDeleteModal = false;
             $this->customerToDelete = null;
             $this->dispatch('notify', type: 'warning', message: 'تم حذف العميل بنجاح.');
@@ -175,7 +190,7 @@ new #[Title('بيانات العملاء')] class extends Component
 
     public function deleteMultiple()
     {
-        Customer::whereIn('id', $this->selectedIds)->delete();
+        Customer::whereIn('id', $this->selectedIds)->delete(); // Soft Delete
         $this->selectedIds = [];
         $this->selectAll = false;
         $this->dispatch('notify', type: 'warning', message: 'تم حذف العملاء المحددين بنجاح.');
@@ -195,7 +210,7 @@ new #[Title('بيانات العملاء')] class extends Component
     public function editCustomer(Customer $customer): void
     {
         $this->form->setCustomer($customer);
-        $this->dispatch('open-modal');
+        // يتم فتح المودل عبر AlpineJS من الـ blade عند رجوع الـ Promise
     }
 
     // ===== تحديث عميل موجود =====

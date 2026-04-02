@@ -73,6 +73,23 @@
                 </div>
             </div>
 
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold mb-3">الجنس</label>
+                <div class="row g-2">
+                    @foreach(\App\Enums\Gender::cases() as $gender)
+                    <div class="col-lg-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" wire:model="selectedGenders" id="gender_{{ $gender->value }}" value="{{ $gender->value }}">
+
+                            <label class="form-check-label text-{{ $gender->color() }}" for="gender_{{ $gender->value }}">
+                                {{ $gender->label() }}
+                            </label>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
         </div>
 
         <div class="offcanvas-footer border-top p-3 text-center hstack gap-2 mt-auto">

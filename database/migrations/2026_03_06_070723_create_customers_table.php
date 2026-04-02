@@ -16,10 +16,14 @@ return new class extends Migration
 
             // البيانات الأساسية
             $table->string('customer_number')->unique()->comment('رقم العميل');
-            $table->string('name')->comment('اسم العميل');
-            $table->string('national_id')->unique()->nullable()->comment('الهوية الوطنية');
-            $table->tinyInteger('age')->unsigned()->nullable()->comment('العمر');
+            $table->string('name')->required()->comment('اسم العميل');
             $table->tinyInteger('gender')->unsigned()->nullable()->comment('الجنس: 1=ذكر، 2=أنثى');
+
+            // بيانات التواصل
+            $table->string('phone')->nullable()->comment('رقم الهاتف');
+            $table->string('mobile')->required()->comment('رقم الموبايل');
+            $table->string('whatsapp')->nullable()->comment('رقم الوتس');
+            $table->string('email')->unique()->nullable()->comment('البريد الإلكتروني');
 
             // بيانات العنوان
             $table->text('general_address')->nullable()->comment('العنوان العام');
@@ -28,15 +32,6 @@ return new class extends Migration
             $table->string('district')->nullable()->comment('الحي');
             $table->string('city')->nullable()->comment('المدينة');
             $table->string('country')->nullable()->comment('الدولة');
-
-            // بيانات التواصل
-            $table->string('mobile')->nullable()->comment('رقم الموبايل');
-            $table->string('email')->unique()->nullable()->comment('البريد الإلكتروني');
-
-            // البيانات المالية والتجارية
-            $table->string('tax_number')->nullable()->comment('الرقم الضريبي');
-            $table->string('dealing_method')->nullable()->comment('طريقة التعامل (كاش/آجل)');
-            $table->decimal('credit_limit', 15, 2)->default(0)->comment('حد الدين');
 
             // الحالة والملاحظات
             $table->tinyInteger('status')->default(1)->comment('1: Active, 2: Inactive, 3: Suspended حالة التفعيل');

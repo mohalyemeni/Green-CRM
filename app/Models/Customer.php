@@ -4,35 +4,43 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\Gender;
 use App\Enums\CustomerStatus;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Customer extends Model
 {
-    use HasFactory, SearchableTrait;
+    use HasFactory, SoftDeletes, SearchableTrait;
+
     /**
-     * الحقول المسموح بتعبئتها جماعياً
+     * الحقول المسموح بتعبئتها جماعياً بناءً على ملف الـ Migration
      */
     protected $fillable = [
+        // البيانات الأساسية
         'customer_number',
         'name',
-        'national_id',
-        'age',
         'gender',
+
+        // بيانات التواصل
+        'phone',
+        'mobile',
+        'whatsapp',
+        'email',
+
+        // بيانات العنوان
         'general_address',
         'building_number',
         'street_name',
         'district',
         'city',
         'country',
-        'mobile',
-        'email',
-        'tax_number',
-        'dealing_method',
-        'credit_limit',
-        'is_active',
+
+        // الحالة والملاحظات
+        'status',
         'notes',
+
+        // التتبع والتدقيق
         'created_by',
         'updated_by',
     ];
@@ -41,43 +49,45 @@ class Customer extends Model
      * تحويل أنواع البيانات (Casting)
      */
     protected $casts = [
-        'status' => CustomerStatus::class,      // ربط حقل TINYINT بالـ Enum
-        'gender' => Gender::class,      // ربط حقل TINYINT بالـ Enum
-        'is_active' => 'boolean',        // تحويل 0 و 1 إلى true/false
-        'credit_limit' => 'decimal:2',   // ضمان ظهور الرقم بفاصلة عشرية
-        'age' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'status'       => CustomerStatus::class,  // TINYINT → CustomerStatus Enum
+        'gender'       => Gender::class,          // TINYINT → Gender Enum
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
+        'deleted_at'   => 'datetime',
     ];
 
-    //get user full name using model
+    /**
+     * الوصول لاسم العميل بشكل منسق
+     */
     public function getFullNameAttribute(): string
     {
         return ucfirst($this->name);
     }
 
     /**
-     * إعدادات البحث وتحديد أولويات الأعمدة
+     * إعدادات البحث وتحديد أولويات الأعمدة (SearchableTrait)
      */
     protected $searchable = [
         'columns' => [
-            // اسم_الجدول.اسم_العمود => الأهمية (رقم)
             'customers.customer_number' => 10,
-            'customers.name' => 10,
-            'customers.mobile'  => 10,
-            'customers.email'      => 8,
-            'customers.status' => 5,
-            'customers.country'   => 5,
+            'customers.name'            => 10,
+            'customers.mobile'          => 9,
+            'customers.phone'           => 8,
+            'customers.email'           => 8,
+            'customers.city'            => 5,
+            'customers.country'         => 5,
         ],
     ];
 
-    // علاقة مع جدول المستخدمين (المُنشئ)
+    // ==========================================
+    // العلاقات (Relationships)
+    // ==========================================
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // علاقة مع جدول المستخدمين (المُعدِّل)
     public function editor()
     {
         return $this->belongsTo(User::class, 'updated_by');
