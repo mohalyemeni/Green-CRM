@@ -463,8 +463,8 @@
                                                     <div class="row g-3">
                                                         <div class="col-lg-12">
                                                             <label class="form-label fw-medium">العنوان العام</label>
-                                                            <input type="text" class="form-control @error('form.general_address') is-invalid @enderror" wire:model.blur="form.general_address" placeholder="المدينة، الحي، الشارع..." />
-                                                            @error('form.general_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                            <input type="text" class="form-control @error('form.address') is-invalid @enderror" wire:model.blur="form.address" placeholder="المدينة، الحي، الشارع..." />
+                                                            @error('form.address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                         </div>
 
                                                         <div class="col-lg-4">

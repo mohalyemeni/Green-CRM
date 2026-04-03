@@ -55,6 +55,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/opportunities', 'pages::opportunities.index')->name('opportunities.index');
         Route::livewire('/service-groups', 'pages::service-groups.index')->name('service-groups.index');
         Route::livewire('/services', 'pages::services.index')->name('services.index');
+        
+        // عروض الأسعار
+        Route::livewire('/quotations', 'pages::quotations.index')->name('quotations.index');
+        Route::livewire('/quotations/create', 'pages::quotations.create')->name('quotations.create');
+        Route::livewire('/quotations/{quotation}/edit', 'pages::quotations.edit')->name('quotations.edit');
+        Route::livewire('/quotations/{quotation}', 'pages::quotations.show')->name('quotations.show');
     });
     Route::resource('category', CategoryController::class);
 });

@@ -29,7 +29,7 @@ class CustomerForm extends Form
     public ?string $email = null;
 
     // بيانات العنوان
-    public ?string $general_address = null;
+    public ?string $address = null;
     public ?string $building_number = null;
     public ?string $street_name = null;
     public ?string $district = null;
@@ -68,7 +68,7 @@ class CustomerForm extends Form
             ],
 
             // بيانات العنوان
-            'general_address' => 'nullable|string|max:1000',
+            'address' => 'nullable|string|max:1000',
             'building_number' => 'nullable|string|max:255',
             'street_name' => 'nullable|string|max:255',
             'district' => 'nullable|string|max:255',
@@ -92,7 +92,7 @@ class CustomerForm extends Form
             'mobile' => 'رقم الموبايل',
             'whatsapp' => 'رقم الوتس',
             'email' => 'البريد الإلكتروني',
-            'general_address' => 'العنوان العام',
+            'address' => 'العنوان العام',
             'building_number' => 'رقم المبنى',
             'street_name' => 'اسم الشارع',
             'district' => 'الحي',
@@ -139,7 +139,7 @@ class CustomerForm extends Form
         $this->email = $customer->email;
 
         // بيانات العنوان
-        $this->general_address = $customer->general_address;
+        $this->address = $customer->address;
         $this->building_number = $customer->building_number;
         $this->street_name = $customer->street_name;
         $this->district = $customer->district;
@@ -172,7 +172,7 @@ class CustomerForm extends Form
                 'mobile',
                 'whatsapp',
                 'email',
-                'general_address',
+                'address',
                 'building_number',
                 'street_name',
                 'district',
@@ -201,7 +201,7 @@ class CustomerForm extends Form
                 'mobile',
                 'whatsapp',
                 'email',
-                'general_address',
+                'address',
                 'building_number',
                 'street_name',
                 'district',

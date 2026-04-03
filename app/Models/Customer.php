@@ -29,7 +29,7 @@ class Customer extends Model
         'email',
 
         // بيانات العنوان
-        'general_address',
+        'address',
         'building_number',
         'street_name',
         'district',
