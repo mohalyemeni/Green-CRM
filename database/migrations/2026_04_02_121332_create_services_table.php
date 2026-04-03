@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->string('code')->index()->comment('كود الخدمة');
             $table->string('name')->index()->comment('اسم الخدمة');
-            $table->string('slug')->unique()->;
+            $table->string('slug')->unique()->comment('الـ Slug للخدمة');
             $table->text('description')->nullable()->comment('تعريف بالخدمة');
             $table->text('requirements')->nullable()->comment('المتطلبات اللازمة للخدمة');
 
