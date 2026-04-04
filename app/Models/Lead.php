@@ -10,7 +10,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Lead extends Model
 {
-    use HasFactory, SoftDeletes, SearchableTrait;
+    use HasFactory, SoftDeletes, SearchableTrait, \App\Traits\LogsCrmActivity;
 
     /**
      * التحميل التلقائي للمودل (Booted)
@@ -46,7 +46,7 @@ class Lead extends Model
         'lead_status_id',
         'lead_source_id',
         'industry_id',
-        'owner_id',
+        'assigned_to',
         'country_id',
         'state',
         'city',
@@ -122,9 +122,17 @@ class Lead extends Model
     /**
      * الموظف المسؤول عن العميل (Owner)
      */
-    public function owner()
+    public function assignee()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    /**
+     * تعليقات العميل
+     */
+    public function comments()
+    {
+        return $this->morphMany(CrmComment::class, 'commentable')->latest();
     }
 
     /**

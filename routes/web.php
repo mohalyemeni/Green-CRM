@@ -61,6 +61,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/quotations/create', 'pages::quotations.create')->name('quotations.create');
         Route::livewire('/quotations/{quotation}/edit', 'pages::quotations.edit')->name('quotations.edit');
         Route::livewire('/quotations/{quotation}', 'pages::quotations.show')->name('quotations.show');
+
+        // العملاء المحتملين (Leads)
+        Route::livewire('/leads', 'pages::leads.index')->name('leads.index');
+        Route::livewire('/leads/create', 'pages::leads.create')->name('leads.create');
+        Route::livewire('/leads/{lead}/edit', 'pages::leads.edit')->name('leads.edit');
+        Route::livewire('/leads/{lead}', 'pages::leads.show')->name('leads.show');
     });
     Route::resource('category', CategoryController::class);
 });

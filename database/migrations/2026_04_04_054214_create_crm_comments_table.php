@@ -28,7 +28,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             // --- نوع التعليق ---
-            $table->string('type', 30)->default(CommentType::COMMENT->value); // comment, question, answer, internal
+            $table->string('type', 30)->default(CommentType::NOTE->value); // comment, question, answer, internal
 
             // --- حالة التعليق ---
             $table->boolean('is_pinned')->default(false); // تعليق مثبت

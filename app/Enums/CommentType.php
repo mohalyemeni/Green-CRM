@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum CommentType: int
 {
-    case COMMENT = 1;
-    case QUESTION = 2;
-    case ANSWER = 3;
-    case INTERNAL = 4;
+    case NOTE = 1;
+    case CALL = 2;
+    case MEETING = 3;
+    case SYSTEM = 4;
     case CLOSED = 5;
 
     /**
@@ -16,10 +16,10 @@ enum CommentType: int
     public function label(): string
     {
         return match ($this) {
-            self::COMMENT => 'تعليق',
-            self::QUESTION => 'سؤال',
-            self::ANSWER => 'إجابة',
-            self::INTERNAL => 'ملاحظة داخلية',
+            self::NOTE => 'ملاحظة',
+            self::CALL => 'مكالمة',
+            self::MEETING => 'اجتماع',
+            self::SYSTEM => 'نظام',
             self::CLOSED => 'تم الإغلاق',
         };
     }
@@ -31,11 +31,11 @@ enum CommentType: int
     public function color(): string
     {
         return match ($this) {
-            self::COMMENT => 'secondary',   // رمادي
-            self::QUESTION => 'warning',    // أصفر
-            self::ANSWER => 'info',        // أزرق
-            self::INTERNAL => 'dark',      // داكن
-            self::CLOSED => 'danger',      // أحمر
+            self::NOTE => 'secondary',
+            self::CALL => 'primary',
+            self::MEETING => 'success',
+            self::SYSTEM => 'dark',
+            self::CLOSED => 'danger',
         };
     }
 }
