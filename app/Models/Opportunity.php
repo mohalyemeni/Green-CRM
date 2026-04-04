@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use App\Traits\LogsCrmActivity;
 
 class Opportunity extends Model
 {
-    use HasFactory, SoftDeletes, SearchableTrait;
+    use HasFactory, SoftDeletes, SearchableTrait, LogsCrmActivity;
 
     /**
      * التحميل التلقائي للمودل (Booted)
@@ -21,7 +22,6 @@ class Opportunity extends Model
             if (empty($opportunity->opportunity_number)) {
                 $latestOpp = static::withTrashed()->latest('id')->first();
                 $nextId = $latestOpp ? $latestOpp->id + 1 : 1;
-                // توليد كود مثل: OPP-202400001
                 $opportunity->opportunity_number = 'OPP-' . date('Y') . str_pad($nextId, 5, '0', STR_PAD_LEFT);
             }
         });
@@ -70,7 +70,6 @@ class Opportunity extends Model
 
     /**
      * إعدادات البحث وتحديد أولويات الأعمدة
-     * تم ضبط الأولوية لعنوان الفرصة ورقمها المرجعي
      */
     protected $searchable = [
         'columns' => [
@@ -136,7 +135,7 @@ class Opportunity extends Model
     }
 
     /**
-     * سبب خسارة الفرصة (في حال تم إغلاقها كخسارة)
+     * سبب خسارة الفرصة
      */
     public function lostReason()
     {
@@ -152,18 +151,68 @@ class Opportunity extends Model
     }
 
     /**
+     * التعليقات (Polymorphic)
+     */
+    public function comments()
+    {
+        return $this->morphMany(CrmComment::class, 'commentable')->latest();
+    }
+
+    /**
+     * المرفقات (Polymorphic)
+     */
+    public function attachments()
+    {
+        return $this->morphMany(CrmAttachment::class, 'attachmentable')->latest();
+    }
+
+    /**
      * تتبع السجلات (Audit Trail)
      */
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
     public function editor()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
     public function deleter()
     {
         return $this->belongsTo(User::class, 'deleted_by');
+    }
+
+    // ==========================================
+    // الصفات المشتقة (Accessors)
+    // ==========================================
+
+    /**
+     * الحصول على label الأولوية
+     */
+    public function getPriorityLabelAttribute(): string
+    {
+        return match ($this->priority) {
+            'low'    => 'منخفضة',
+            'medium' => 'متوسطة',
+            'high'   => 'عالية',
+            'urgent' => 'عاجلة',
+            default  => '—',
+        };
+    }
+
+    /**
+     * الحصول على لون الأولوية
+     */
+    public function getPriorityColorAttribute(): string
+    {
+        return match ($this->priority) {
+            'low'    => 'info',
+            'medium' => 'primary',
+            'high'   => 'warning',
+            'urgent' => 'danger',
+            default  => 'secondary',
+        };
     }
 }

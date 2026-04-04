@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable()->comment('البريد الإلكتروني');
 
             // بيانات العنوان
-            $table->text('general_address')->nullable()->comment('العنوان العام');
+            $table->text('address')->nullable()->comment('العنوان العام');
             $table->string('building_number')->nullable()->comment('رقم المبنى');
             $table->string('street_name')->nullable()->comment('اسم الشارع');
             $table->string('district')->nullable()->comment('الحي');

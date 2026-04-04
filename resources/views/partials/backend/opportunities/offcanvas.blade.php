@@ -1,121 +1,162 @@
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" wire:ignore.self
-    :class="{ 'show': showOffcanvas }"
-    :style="showOffcanvas ? 'visibility: visible;' : 'visibility: hidden;'">
-    <div class="offcanvas-header bg-light">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">تصفية الفرص البيعية</h5>
-        <button type="button" class="btn-close text-reset" @click="$wire.resetFilters(); showOffcanvas = false" aria-label="Close"></button>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasFilters" aria-labelledby="offcanvasFiltersLabel" wire:ignore.self>
+    <div class="offcanvas-header bg-light border-bottom p-3">
+        <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasFiltersLabel">
+            <i class="ri-filter-3-line text-primary me-2 fs-20"></i>
+            <span>تصفية الفرص البيعية</span>
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
 
-    <form wire:submit.prevent="applyFilters" class="d-flex flex-column flex-grow-1 overflow-hidden">
-        <div class="offcanvas-body">
+    <div class="offcanvas-body p-0">
+        <div class="p-4" style="padding-bottom: 100px !important;">
 
-            {{-- Date Range Filter --}}
+            {{-- تصفية بالفترة الزمنية --}}
             <div class="mb-4">
-                <label class="form-label text-muted text-uppercase fw-semibold mb-3">تاريخ الإضافة</label>
-                <div class="row g-2 align-items-center">
-                    <div class="col-lg">
-                        <input type="date" class="form-control" wire:model="created_from" id="created_from" placeholder="من تاريخ">
+                <label class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">الفترة الزمنية</label>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label fs-13 mb-1">من تاريخ</label>
+                        <input type="date" class="form-control form-control-sm" wire:model="created_from">
                     </div>
-                    <div class="col-lg-auto">إلى</div>
-                    <div class="col-lg">
-                        <input type="date" class="form-control" wire:model="created_to" id="created_to" placeholder="إلى تاريخ">
+                    <div class="col-6">
+                        <label class="form-label fs-13 mb-1">إلى تاريخ</label>
+                        <input type="date" class="form-control form-control-sm" wire:model="created_to">
                     </div>
                 </div>
             </div>
 
-            {{-- Priority Filter (باستخدام Choices.js) --}}
-            <div class="mb-4" wire:ignore x-data="{
-                choice: null,
-                init() {
-                    this.choice = new Choices(this.$refs.prioritySelect, {
-                        searchEnabled: false,
-                        removeItemButton: true,
-                        placeholderValue: 'اختر مستوى الأولوية...',
-                        itemSelectText: ''
-                    });
+            <hr class="border-dashed mb-4">
 
-                    window.addEventListener('filters-reset', () => {
-                        this.choice.removeActiveItems();
-                    });
-
-                    this.$refs.prioritySelect.addEventListener('change', (e) => {
-                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-                        $wire.set('selectedPriorities', selectedValues, false);
-                    });
-                }
-            }">
-                <label class="form-label text-muted text-uppercase fw-semibold mb-3">الأولوية (Priority)</label>
-                <select x-ref="prioritySelect" class="form-control" multiple>
-                    <option value="urgent">عاجل جداً</option>
-                    <option value="high">عالية</option>
-                    <option value="medium">متوسطة</option>
-                    <option value="low">منخفضة</option>
-                </select>
-            </div>
-
-            {{-- Pipeline Stage Filter (باستخدام Choices.js) --}}
-            <div class="mb-4" wire:ignore x-data="{
-                choice: null,
-                init() {
-                    this.choice = new Choices(this.$refs.stageSelect, {
-                        searchEnabled: true,
-                        removeItemButton: true,
-                        placeholderValue: 'اختر مراحل المبيعات...',
-                        itemSelectText: ''
-                    });
-
-                    window.addEventListener('filters-reset', () => {
-                        this.choice.removeActiveItems();
-                    });
-
-                    this.$refs.stageSelect.addEventListener('change', (e) => {
-                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-                        $wire.set('selectedStages', selectedValues, false);
-                    });
-                }
-            }">
-                <label class="form-label text-muted text-uppercase fw-semibold mb-3">مرحلة المبيعات (Stage)</label>
-                <select x-ref="stageSelect" class="form-control" multiple>
-                    @foreach(\App\Models\PipelineStage::orderBy('sort_order')->get() as $stage)
-                    <option value="{{ $stage->id }}">{{ $stage->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- Opportunity Source Filter (باستخدام Choices.js) --}}
+            {{-- تصفية بالمصدر --}}
             <div class="mb-4" wire:ignore x-data="{
                 choice: null,
                 init() {
                     this.choice = new Choices(this.$refs.sourceSelect, {
                         searchEnabled: true,
                         removeItemButton: true,
-                        placeholderValue: 'اختر مصادر الفرص...',
+                        shouldSort: false,
+                        placeholderValue: 'ابحث عن المصدر...',
                         itemSelectText: ''
                     });
-
-                    window.addEventListener('filters-reset', () => {
-                        this.choice.removeActiveItems();
-                    });
-
+                    window.addEventListener('filters-reset', () => { this.choice.removeActiveItems(); });
                     this.$refs.sourceSelect.addEventListener('change', (e) => {
                         let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
                         $wire.set('selectedSources', selectedValues, false);
                     });
                 }
             }">
-                <label class="form-label text-muted text-uppercase fw-semibold mb-3">المصدر (Source)</label>
-                <select x-ref="sourceSelect" class="form-control" multiple>
-                    @foreach(\App\Models\OpportunitySource::all() as $source)
-                    <option value="{{ $source->id }}">{{ $source->name }}</option>
+                <label for="opp-source-select" class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">
+                    <i class="ri-share-forward-line me-1"></i> المصدر (Source)
+                </label>
+                <select x-ref="sourceSelect" class="form-control" id="opp-source-select" multiple>
+                    @foreach($this->sources as $source)
+                        <option value="{{ $source->id }}">{{ $source->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-        </div>
+            {{-- تصفية بالمسؤول --}}
+            <div class="mb-4" wire:ignore x-data="{
+                choice: null,
+                init() {
+                    this.choice = new Choices(this.$refs.assigneeSelect, {
+                        searchEnabled: true,
+                        removeItemButton: true,
+                        shouldSort: false,
+                        placeholderValue: 'ابحث عن المسؤول...',
+                        itemSelectText: ''
+                    });
+                    window.addEventListener('filters-reset', () => { this.choice.removeActiveItems(); });
+                    this.$refs.assigneeSelect.addEventListener('change', (e) => {
+                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+                        $wire.set('selectedAssignees', selectedValues, false);
+                    });
+                }
+            }">
+                <label for="opp-assignee-select" class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">
+                    <i class="ri-user-received-line me-1"></i> المسؤول (Assignee)
+                </label>
+                <select x-ref="assigneeSelect" class="form-control" id="opp-assignee-select" multiple>
+                    @foreach($this->users as $user)
+                        <option value="{{ $user->id }}">{{ $user->full_name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="offcanvas-footer border-top p-3 text-center hstack gap-2 mt-auto">
-            <button type="button" class="btn btn-light w-100" wire:click="resetFilters">مسح الفلتر</button>
-            <button type="submit" class="btn btn-success w-100">تطبيق الفلتر</button>
+            {{-- تصفية بالمرحلة --}}
+            <div class="mb-4" wire:ignore x-data="{
+                choice: null,
+                init() {
+                    this.choice = new Choices(this.$refs.stageSelect, {
+                        searchEnabled: true,
+                        removeItemButton: true,
+                        shouldSort: false,
+                        placeholderValue: 'ابحث عن المرحلة...',
+                        itemSelectText: ''
+                    });
+                    window.addEventListener('filters-reset', () => { this.choice.removeActiveItems(); });
+                    this.$refs.stageSelect.addEventListener('change', (e) => {
+                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+                        $wire.set('selectedStages', selectedValues, false);
+                    });
+                }
+            }">
+                <label for="opp-stage-select" class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">
+                    <i class="ri-kanban-line me-1"></i> مرحلة المبيعات (Stage)
+                </label>
+                <select x-ref="stageSelect" class="form-control" id="opp-stage-select" multiple>
+                    @foreach($this->stages as $stage)
+                        <option value="{{ $stage->id }}">{{ $stage->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- تصفية بالأولوية --}}
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">الأولوية</label>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach($this->priorities as $priority)
+                        <div>
+                            <input type="checkbox" class="btn-check" value="{{ $priority['value'] }}" wire:model="selectedPriorities" id="opp_priority_{{ $priority['value'] }}">
+                            <label class="btn btn-sm btn-outline-{{ $priority['color'] }}" for="opp_priority_{{ $priority['value'] }}">
+                                {{ $priority['label'] }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <hr class="border-dashed mb-4">
+
+            {{-- فرص بدون تفاعل --}}
+            <div class="alert alert-danger border-2 border-danger-subtle bg-danger-subtle p-3 mb-0" role="alert">
+                <div class="form-check form-switch form-check-danger mb-2 d-flex align-items-center px-0">
+                    <input class="form-check-input ms-0 me-2" style="width: 35px; height: 18px; cursor: pointer;" type="checkbox" wire:model="withoutComments48h" id="noOppComments">
+                    <label class="form-check-label fw-bold fs-14 mb-0" style="cursor: pointer;" for="noOppComments">فرص بدون تفاعل</label>
+                </div>
+                <p class="mb-0 fs-12 text-danger mt-1">يُظهر الفرص التي لم تسجل لها أي نشاطات أو تعليقات خلال الـ <strong class="fw-bold fs-13">48 ساعة الماضية</strong>.</p>
+            </div>
         </div>
-    </form>
+    </div>
+
+    {{-- الأزرار السفلية --}}
+    <div class="offcanvas-footer border-top p-3 text-center bg-white" style="position: absolute; bottom: 0; width: 100%; z-index: 9;">
+        <div class="row g-2">
+            <div class="col-6">
+                <button type="button" class="btn btn-outline-danger w-100" wire:click="resetFilters">
+                    <i class="ri-refresh-line me-1 align-bottom"></i> مسح الكل
+                </button>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-primary w-100" wire:click="applyFilters" wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="applyFilters">
+                        <i class="ri-check-double-line me-1 align-bottom"></i> تطبيق الفلاتر
+                    </span>
+                    <span wire:loading wire:target="applyFilters">
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span> جاري التطبيق...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

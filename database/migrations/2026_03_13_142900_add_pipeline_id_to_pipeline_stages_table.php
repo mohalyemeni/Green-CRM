@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pipeline_stages', function (Blueprint $table) {
-            $table->foreignId('pipeline_id')->after('id')->nullable()->constrained('pipelines')->onDelete('cascade');
-        });
+        // Schema::table('pipeline_stages', function (Blueprint $table) {
+        //     $table->foreignId('pipeline_id')->after('id')->nullable()->constrained('pipelines')->onDelete('cascade');
+        // });
     }
 
     /**
@@ -21,9 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pipeline_stages', function (Blueprint $table) {
-            $table->dropForeign(['pipeline_id']);
-            $table->dropColumn('pipeline_id');
-        });
+        // Schema::table('pipeline_stages', function (Blueprint $table) {
+        //     $table->dropForeign(['pipeline_id']);
+        //     $table->dropColumn('pipeline_id');
+        // });
     }
 };

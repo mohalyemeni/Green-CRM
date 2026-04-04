@@ -11,7 +11,7 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Pipeline extends Model
 {
-    use HasFactory, SoftDeletes, SearchableTrait, HasActiveScope;
+    use HasFactory, SoftDeletes, SearchableTrait;
 
     /**
      * الحقول المسموح بتعبئتها جماعياً

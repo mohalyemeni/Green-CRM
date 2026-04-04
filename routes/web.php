@@ -67,6 +67,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/leads/create', 'pages::leads.create')->name('leads.create');
         Route::livewire('/leads/{lead}/edit', 'pages::leads.edit')->name('leads.edit');
         Route::livewire('/leads/{lead}', 'pages::leads.show')->name('leads.show');
+
+        // الفرص البيعية (Opportunities)
+        Route::livewire('/opportunities', 'pages::opportunities.index')->name('opportunities.index');
+        Route::livewire('/opportunities/create', 'pages::opportunities.create')->name('opportunities.create');
+        Route::livewire('/opportunities/{opportunity}/edit', 'pages::opportunities.edit')->name('opportunities.edit');
+        Route::livewire('/opportunities/{opportunity}', 'pages::opportunities.show')->name('opportunities.show');
     });
     Route::resource('category', CategoryController::class);
 });

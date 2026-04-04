@@ -20,7 +20,7 @@ new #[Title('إنشاء عرض سعر جديد')] class extends Component
 
     public function getActiveCustomersProperty()
     {
-        return Customer::select('id', 'name', 'email', 'phone', 'general_address')
+        return Customer::select('id', 'name', 'email', 'phone', 'address')
             ->orderBy('name')
             ->get();
     }
