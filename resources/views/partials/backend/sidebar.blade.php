@@ -80,13 +80,13 @@
                 <li class="menu-title"><span data-key="t-menu">نظام المبيعات (CRM)</span></li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.leads.index')}}">
+                    <a class="nav-link menu-link" href="">
                         <i class="ri-user-star-line"></i> <span data-key="t-leads">العملاء المحتملين (Leads)</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.opportunities.index')}}">
+                    <a class="nav-link menu-link" href="">
                         <i class="ri-briefcase-4-line"></i> <span data-key="t-opportunities">الفرص البيعية</span>
                     </a>
                 </li>

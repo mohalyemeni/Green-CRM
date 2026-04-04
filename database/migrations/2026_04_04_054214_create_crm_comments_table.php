@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('crm_comments', function (Blueprint $table) {
             $table->id();
 
             // --- العلاقة Polymorphic ---
@@ -24,7 +24,7 @@ return new class extends Migration
             // --- الردود المتداخلة (Nested Comments) ---
             $table->foreignId('parent_id')
                 ->nullable()
-                ->constrained('comments')
+                ->constrained('crm_comments')
                 ->cascadeOnDelete();
 
             // --- نوع التعليق ---
@@ -62,6 +62,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('crm_comments');
     }
 };

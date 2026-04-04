@@ -51,11 +51,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/lost-reasons', 'pages::lost-reasons.index')->name('lost-reasons.index');
         Route::livewire('/pipeline-stages', 'pages::pipeline-stages.index')->name('pipeline-stages.index');
         Route::livewire('/lead-statuses', 'pages::lead-statuses.index')->name('lead-statuses.index');
-        Route::livewire('/leads', 'pages::leads.index')->name('leads.index');
-        Route::livewire('/opportunities', 'pages::opportunities.index')->name('opportunities.index');
+
+
         Route::livewire('/service-groups', 'pages::service-groups.index')->name('service-groups.index');
         Route::livewire('/services', 'pages::services.index')->name('services.index');
-        
+
         // عروض الأسعار
         Route::livewire('/quotations', 'pages::quotations.index')->name('quotations.index');
         Route::livewire('/quotations/create', 'pages::quotations.create')->name('quotations.create');
