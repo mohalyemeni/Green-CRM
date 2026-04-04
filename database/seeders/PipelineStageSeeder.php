@@ -100,10 +100,13 @@ class PipelineStageSeeder extends Seeder
         ];
 
         foreach ($stages as $stage) {
-            \App\Models\PipelineStage::create([
-                ...$stage,
-                'created_by' => 1,  // ← يفضل auth()->id() إذا كان Seeder مخصص
-            ]);
+            \App\Models\PipelineStage::updateOrCreate(
+                ['code' => $stage['code']], // شرط البحث
+                [
+                    ...$stage,
+                    'created_by' => 1,
+                ]
+            );
         }
     }
 }
