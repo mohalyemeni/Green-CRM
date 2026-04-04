@@ -40,6 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LeadStatusSeeder::class);
         $this->call(LeadStatusSeeder::class);
         $this->call(OpportunitySourceSeeder::class);
-        $this->call(PipelineStageSeeder::class);
+        // $this->call(PipelineStageSeeder::class);
     }
 }
