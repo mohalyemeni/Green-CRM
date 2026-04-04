@@ -48,6 +48,14 @@ class CrmAttachment extends Model
     }
 
     /**
+     * العميل المرتبط بالمرفق
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    /**
      * تنسيق حجم الملف
      */
     public function getFileSizeFormattedAttribute(): string

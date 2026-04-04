@@ -86,6 +86,7 @@ new #[Title('ملف الفرصة البيعية')] class extends Component
         CrmAttachment::create([
             'attachmentable_type' => Opportunity::class,
             'attachmentable_id'   => $this->opportunity->id,
+            'customer_id'         => $this->opportunity->customer_id,
             'file_name'           => $file->getClientOriginalName(),
             'file_path'           => $filePath,
             'file_type'           => $file->getMimeType(),
@@ -119,7 +120,8 @@ new #[Title('ملف الفرصة البيعية')] class extends Component
         $attachment = CrmAttachment::find($attachmentId);
         if ($attachment) {
             if (Storage::disk('public')->exists($attachment->file_path)) {
-                return Storage::disk('public')->download($attachment->file_path, $attachment->file_name);
+                $fullPath = storage_path('app/public/' . $attachment->file_path);
+                return response()->download($fullPath, $attachment->file_name);
             } else {
                 $this->dispatch('notify', type: 'error', message: 'عذراً، الملف غير موجود.');
             }

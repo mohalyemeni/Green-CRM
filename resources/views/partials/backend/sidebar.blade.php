@@ -80,20 +80,34 @@
                 <li class="menu-title"><span data-key="t-menu">نظام المبيعات (CRM)</span></li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="">
-                        <i class="ri-user-star-line"></i> <span data-key="t-leads">العملاء المحتملين (Leads)</span>
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}"
+                       href="{{ route('admin.leads.index') }}">
+                        <i class="ri-user-star-line"></i>
+                        <span data-key="t-leads">العملاء المحتملين (Leads)</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="">
-                        <i class="ri-briefcase-4-line"></i> <span data-key="t-opportunities">الفرص البيعية</span>
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.opportunities.*') ? 'active' : '' }}"
+                       href="{{ route('admin.opportunities.index') }}">
+                        <i class="ri-funds-line"></i>
+                        <span data-key="t-opportunities">الفرص البيعية</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('admin.customers.index')}}">
-                        <i class="ri-team-line"></i> <span data-key="t-customers">العملاء (Customers)</span>
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.attachments.*') ? 'active' : '' }}"
+                       href="{{ route('admin.attachments.index') }}">
+                        <i class="ri-archive-2-line"></i>
+                        <span data-key="t-attachments">أرشيف المرفقات</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}"
+                       href="{{ route('admin.customers.index') }}">
+                        <i class="ri-team-line"></i>
+                        <span data-key="t-customers">العملاء (Customers)</span>
                     </a>
                 </li>
 

@@ -73,6 +73,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/opportunities/create', 'pages::opportunities.create')->name('opportunities.create');
         Route::livewire('/opportunities/{opportunity}/edit', 'pages::opportunities.edit')->name('opportunities.edit');
         Route::livewire('/opportunities/{opportunity}', 'pages::opportunities.show')->name('opportunities.show');
+
+        // أرشيف المرفقات (Attachments Archive)
+        Route::livewire('/attachments', 'pages::attachments.index')->name('attachments.index');
     });
     Route::resource('category', CategoryController::class);
 });
