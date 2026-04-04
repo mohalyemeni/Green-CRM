@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-    //     Schema::table('customers', function (Blueprint $table) {
-    //         \Illuminate\Support\Facades\DB::statement("ALTER TABLE `customers` CHANGE `address` `general_address` text COLLATE 'utf8mb4_unicode_ci' NULL COMMENT 'العنوان العام'");
-    //     });
-    // }
+        //     Schema::table('customers', function (Blueprint $table) {
+        //         \Illuminate\Support\Facades\DB::statement("ALTER TABLE `customers` CHANGE `address` `general_address` text COLLATE 'utf8mb4_unicode_ci' NULL COMMENT 'العنوان العام'");
+        //     });
+    }
 };
