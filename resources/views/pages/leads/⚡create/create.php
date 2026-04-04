@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Pages\Leads;
 
 use Livewire\Component;
 use App\Livewire\Forms\LeadForm;
@@ -38,7 +38,7 @@ new #[Title('إضافة عميل محتمل')] class extends Component
     #[Computed]
     public function users()
     {
-        return User::orderBy('name')->get(['id', 'name']);
+        return User::orderBy('first_name')->get(['id', 'first_name', 'last_name']);
     }
 
     #[Computed]

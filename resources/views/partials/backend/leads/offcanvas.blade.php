@@ -1,60 +1,142 @@
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasFilters" aria-labelledby="offcanvasFiltersLabel" wire:ignore.self>
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title" id="offcanvasFiltersLabel">الفلاتر المتقدمة</h5>
+    <div class="offcanvas-header bg-light border-bottom p-3">
+        <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasFiltersLabel">
+            <i class="ri-filter-3-line text-primary me-2 fs-20"></i>
+            <span>تصفية العملاء المحتملين</span>
+        </h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
-        
-        <div class="mb-3">
-            <label class="form-label">المصدر</label>
-            @foreach($sources as $source)
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{{ $source->id }}" wire:model="selectedSources" id="source_{{ $source->id }}">
-                    <label class="form-check-label" for="source_{{ $source->id }}">
-                        {{ $source->name }}
-                    </label>
+
+    <div class="offcanvas-body p-0">
+        <div class="p-4" style="padding-bottom: 100px !important;">
+            
+            {{-- تصفية بالفترة الزمنية --}}
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">الفترة الزمنية</label>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label fs-13 mb-1">من تاريخ</label>
+                        <input type="date" class="form-control form-control-sm" wire:model="created_from">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fs-13 mb-1">إلى تاريخ</label>
+                        <input type="date" class="form-control form-control-sm" wire:model="created_to">
+                    </div>
                 </div>
-            @endforeach
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">المسؤول</label>
-            @foreach($users as $user)
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{{ $user->id }}" wire:model="selectedAssignees" id="user_{{ $user->id }}">
-                    <label class="form-check-label" for="user_{{ $user->id }}">
-                        {{ $user->name }}
-                    </label>
-                </div>
-            @endforeach
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">الأولوية</label>
-            @foreach($priorities as $priority)
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{{ $priority->value }}" wire:model="selectedPriorities" id="priority_{{ $priority->value }}">
-                    <label class="form-check-label" for="priority_{{ $priority->value }}">
-                        <span class="badge bg-{{ $priority->color() }}">{{ $priority->label() }}</span>
-                    </label>
-                </div>
-            @endforeach
-        </div>
-
-        <hr>
-
-        <div class="mb-4">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" wire:model="withoutComments48h" id="noComments">
-                <label class="form-check-label fw-bold text-danger" for="noComments">عملاء بدون تفاعل لأكثر من 48 ساعة</label>
             </div>
-            <div class="form-text">يعرض العملاء الذين لم يتم إضافة أي تعليق/نشاط على ملفهم خلال الـ 48 ساعة الماضية</div>
-        </div>
+            
+            <hr class="border-dashed mb-4">
 
-        <div class="d-grid gap-2">
-            <button class="btn btn-primary" wire:click="applyFilters">تطبيق الفلاتر</button>
-            <button class="btn btn-outline-secondary" wire:click="resetFilters">مسح الكل</button>
-        </div>
+            {{-- تصفية بالمصدر --}}
+            <div class="mb-4" wire:ignore x-data="{
+                choice: null,
+                init() {
+                    this.choice = new Choices(this.$refs.sourceSelect, {
+                        searchEnabled: true,
+                        removeItemButton: true,
+                        shouldSort: false,
+                        placeholderValue: 'ابحث عن المصدر...',
+                        itemSelectText: ''
+                    });
 
+                    window.addEventListener('filters-reset', () => {
+                        this.choice.removeActiveItems();
+                    });
+
+                    this.$refs.sourceSelect.addEventListener('change', (e) => {
+                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+                        $wire.set('selectedSources', selectedValues, false);
+                    });
+                }
+            }">
+                <label for="source-select" class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">
+                    <i class="ri-share-forward-line me-1"></i> المصدر (Source)
+                </label>
+                <select x-ref="sourceSelect" class="form-control" id="source-select" multiple>
+                    @foreach($this->sources as $source)
+                        <option value="{{ $source->id }}">{{ $source->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- تصفية بالمسؤول --}}
+            <div class="mb-4" wire:ignore x-data="{
+                choice: null,
+                init() {
+                    this.choice = new Choices(this.$refs.assigneeSelect, {
+                        searchEnabled: true,
+                        removeItemButton: true,
+                        shouldSort: false,
+                        placeholderValue: 'ابحث عن المسؤول...',
+                        itemSelectText: ''
+                    });
+
+                    window.addEventListener('filters-reset', () => {
+                        this.choice.removeActiveItems();
+                    });
+
+                    this.$refs.assigneeSelect.addEventListener('change', (e) => {
+                        let selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+                        $wire.set('selectedAssignees', selectedValues, false);
+                    });
+                }
+            }">
+                <label for="assignee-select" class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">
+                    <i class="ri-user-received-line me-1"></i> المسؤول (Assignee)
+                </label>
+                <select x-ref="assigneeSelect" class="form-control" id="assignee-select" multiple>
+                    @foreach($this->users as $user)
+                        <option value="{{ $user->id }}">{{ $user->full_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- تصفية بالأولوية --}}
+            <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold fs-12 mb-2">الأولوية</label>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach($this->priorities as $priority)
+                        <div>
+                            <input type="checkbox" class="btn-check" value="{{ $priority->value }}" wire:model="selectedPriorities" id="priority_{{ $priority->value }}">
+                            <label class="btn btn-sm btn-outline-{{ $priority->color() }}" for="priority_{{ $priority->value }}">
+                                {{ $priority->label() }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <hr class="border-dashed mb-4">
+
+            {{-- عملاء مهملون --}}
+            <div class="alert alert-danger border-2 border-danger-subtle bg-danger-subtle p-3 mb-0" role="alert">
+                <div class="form-check form-switch form-check-danger mb-2 d-flex align-items-center px-0">
+                    <input class="form-check-input ms-0 me-2" style="width: 35px; height: 18px; cursor: pointer;" type="checkbox" wire:model="withoutComments48h" id="noComments">
+                    <label class="form-check-label fw-bold fs-14 mb-0" style="cursor: pointer;" for="noComments">عملاء بدون تفاعل</label>
+                </div>
+                <p class="mb-0 fs-12 text-danger mt-1">يُظهر العملاء الذين لم تسجل لهم أي نشاطات أو تعليقات خلال الـ <strong class="fw-bold fs-13">48 ساعة الماضية</strong>.</p>
+            </div>
+        </div>
+    </div>
+
+    {{-- الأزرار السفلية --}}
+    <div class="offcanvas-footer border-top p-3 text-center bg-white" style="position: absolute; bottom: 0; width: 100%; z-index: 9;">
+        <div class="row g-2">
+            <div class="col-6">
+                <button type="button" class="btn btn-outline-danger w-100" wire:click="resetFilters">
+                    <i class="ri-refresh-line me-1 align-bottom"></i> مسح الكل
+                </button>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-primary w-100" wire:click="applyFilters" wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="applyFilters">
+                        <i class="ri-check-double-line me-1 align-bottom"></i> تطبيق الفلاتر
+                    </span>
+                    <span wire:loading wire:target="applyFilters">
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span> جاري التطبيق...
+                    </span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

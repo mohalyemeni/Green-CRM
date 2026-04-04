@@ -3,7 +3,6 @@
     sortField: @entangle('sortField'),
     sortDirection: @entangle('sortDirection'),
     showDeleteModal: false,
-    showOffcanvas: false,
     sortBy(field) {
         $wire.sortBy(field);
     },
@@ -17,8 +16,7 @@
     }
 }"
     x-on:open-delete-modal.window="showDeleteModal = true"
-    x-on:close-delete-modal.window="showDeleteModal = false"
-    x-on:close-offcanvas.window="showOffcanvas = false">
+    x-on:close-delete-modal.window="showDeleteModal = false">
 
     {{-- شريط البحث والأزرار --}}
     <div class="row">
@@ -52,7 +50,7 @@
                                         <i class="ri-delete-bin-2-line"></i> (<span x-text="selectedIds.length"></span>)
                                     </button>
                                 </div>
-                                <button type="button" class="btn btn-info" @click="showOffcanvas = true">
+                                <button type="button" class="btn btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters">
                                     <i class="ri-filter-3-line align-bottom me-1"></i> تصفية
                                 </button>
                                 <a href="{{ route('admin.leads.create') }}" class="btn btn-success">
@@ -214,7 +212,7 @@
                                         @endif
                                     </td>
 
-                                    <td>{{ $lead->assignee?->name ?? '—' }}</td>
+                                    <td>{{ $lead->assignee?->full_name ?? '—' }}</td>
 
                                     <td>
                                         @if($lead->status)
@@ -305,7 +303,6 @@
 
     {{-- Backdrops --}}
     <div class="modal-backdrop fade show" x-show="showDeleteModal" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"></div>
-    <div class="offcanvas-backdrop fade show" x-show="showOffcanvas" x-transition.opacity @click="showOffcanvas = false" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1040;"></div>
 
     @push('scripts')
     <script>
@@ -316,6 +313,13 @@
                     toast: true, position: 'top-end', showConfirmButton: false,
                     timer: 4000, timerProgressBar: true,
                 }).fire({ icon: iconMap[type] ?? 'info', title: message });
+            });
+            Livewire.on('close-offcanvas', () => {
+                var offcanvasElement = document.getElementById('offcanvasFilters');
+                if (offcanvasElement) {
+                    var offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                    if (offcanvasInstance) offcanvasInstance.hide();
+                }
             });
         });
     </script>

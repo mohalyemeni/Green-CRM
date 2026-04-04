@@ -175,6 +175,6 @@ new #[Title('العملاء المحتملين')] class extends Component
 
     public function render()
     {
-        return view('pages.leads.⚡index.index');
+        return view('pages.leads.index');
     }
 };

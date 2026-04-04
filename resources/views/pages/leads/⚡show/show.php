@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Pages\Leads;
 
 use Livewire\Component;
 use App\Models\Lead;

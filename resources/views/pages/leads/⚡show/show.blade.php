@@ -85,7 +85,7 @@
                             <i class="ri-user-received-line text-primary fs-16 me-2 flex-shrink-0"></i>
                             <div>
                                 <span class="text-muted fs-11">المسؤول</span>
-                                <p class="mb-0 fw-medium">{{ $lead->assignee?->name ?? 'غير معين' }}</p>
+                                <p class="mb-0 fw-medium">{{ $lead->assignee?->full_name ?? 'غير معين' }}</p>
                             </div>
                         </li>
                         <li class="d-flex align-items-center">
@@ -114,7 +114,7 @@
                             </div>
                             <div class="flex-grow-1">
                                 <p class="mb-0 fs-13">
-                                    <span class="fw-medium">{{ $activity->user?->name ?? 'System' }}</span>
+                                    <span class="fw-medium">{{ $activity->user?->full_name ?? 'System' }}</span>
                                     — {{ $activity->description }}
                                 </p>
                                 <small class="text-muted">{{ $activity->created_at->diffForHumans() }}</small>
@@ -203,14 +203,14 @@
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-sm">
                                     <div class="avatar-title rounded-circle bg-{{ $cType ? $cType->color() : 'secondary' }}-subtle text-{{ $cType ? $cType->color() : 'secondary' }} fw-bold">
-                                        {{ mb_substr($comment->user?->name ?? 'S', 0, 1) }}
+                                        {{ mb_substr($comment->user?->full_name ?? 'S', 0, 1) }}
                                     </div>
                                 </div>
                             </div>
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                     <div>
-                                        <h6 class="mb-0 fs-14">{{ $comment->user?->name ?? 'System' }}</h6>
+                                        <h6 class="mb-0 fs-14">{{ $comment->user?->full_name ?? 'System' }}</h6>
                                         @if($cType)
                                             <span class="badge bg-{{ $cType->color() }}-subtle text-{{ $cType->color() }} me-1 mt-1">
                                                 {{ $cType->label() }}

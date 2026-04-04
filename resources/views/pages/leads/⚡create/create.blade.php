@@ -49,35 +49,47 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="mobile" class="form-label fw-medium">رقم الجوال <span class="text-danger">*</span></label>
-                                <input type="text" id="mobile" dir="ltr"
-                                    class="form-control @error('form.mobile') is-invalid @enderror"
-                                    wire:model.blur="form.mobile"
-                                    placeholder="+966 5x xxx xxxx">
-                                @error('form.mobile') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <div class="input-group">
+                                    <input type="text" id="mobile" dir="ltr"
+                                        class="form-control @error('form.mobile') is-invalid @enderror"
+                                        wire:model.blur="form.mobile"
+                                        placeholder="+966 5x xxx xxxx">
+                                    <span class="input-group-text"><i class="ri-smartphone-line"></i></span>
+                                </div>
+                                @error('form.mobile') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="phone" class="form-label fw-medium">رقم الهاتف</label>
-                                <input type="text" id="phone" dir="ltr"
-                                    class="form-control @error('form.phone') is-invalid @enderror"
-                                    wire:model.blur="form.phone"
-                                    placeholder="+966 1x xxx xxxx">
-                                @error('form.phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <div class="input-group">
+                                    <input type="text" id="phone" dir="ltr"
+                                        class="form-control @error('form.phone') is-invalid @enderror"
+                                        wire:model.blur="form.phone"
+                                        placeholder="+966 1x xxx xxxx">
+                                    <span class="input-group-text"><i class="ri-phone-line"></i></span>
+                                </div>
+                                @error('form.phone') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="email" class="form-label fw-medium">البريد الإلكتروني</label>
-                                <input type="email" id="email" dir="ltr"
-                                    class="form-control @error('form.email') is-invalid @enderror"
-                                    wire:model.blur="form.email"
-                                    placeholder="example@domain.com">
-                                @error('form.email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <div class="input-group">
+                                    <input type="email" id="email" dir="ltr"
+                                        class="form-control @error('form.email') is-invalid @enderror"
+                                        wire:model.blur="form.email"
+                                        placeholder="example@domain.com">
+                                    <span class="input-group-text"><i class="ri-mail-line"></i></span>
+                                </div>
+                                @error('form.email') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="company_name" class="form-label fw-medium">اسم الشركة</label>
-                                <input type="text" id="company_name"
-                                    class="form-control @error('form.company_name') is-invalid @enderror"
-                                    wire:model.blur="form.company_name"
-                                    placeholder="اسم الشركة أو المنشأة">
-                                @error('form.company_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <div class="input-group">
+                                    <input type="text" id="company_name"
+                                        class="form-control @error('form.company_name') is-invalid @enderror"
+                                        wire:model.blur="form.company_name"
+                                        placeholder="اسم الشركة أو المنشأة">
+                                    <span class="input-group-text"><i class="ri-building-line"></i></span>
+                                </div>
+                                @error('form.company_name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
                         </div>
                     </div>
@@ -127,7 +139,7 @@
                                 <select id="assigned_to" class="form-select" wire:model="form.assigned_to">
                                     <option value="">-- بدون مسؤول --</option>
                                     @foreach($this->users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}">{{ $user->full_name }}</option>
                                     @endforeach
                                 </select>
                             </div>

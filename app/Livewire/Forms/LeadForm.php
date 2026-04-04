@@ -111,6 +111,8 @@ class LeadForm extends Form
     {
         $this->validate();
 
+        $companyId = \App\Models\Company::first()?->id ?? 1;
+
         $lead = Lead::create([
             ...collect($this->only([
                 'first_name',
@@ -124,6 +126,7 @@ class LeadForm extends Form
                 'lead_status_id',
                 'priority',
             ]))->map(fn($v) => $v === '' ? null : $v)->toArray(),
+            'company_id' => $companyId,
             'created_by' => auth()->id(),
         ]);
 
@@ -150,6 +153,37 @@ class LeadForm extends Form
             'updated_by' => auth()->id(),
         ]);
 
+        if ($this->lead_status_id && $this->lead_status_id != $this->previous_status_id) {
+            $newStatus = \App\Models\LeadStatus::find($this->lead_status_id);
+            if ($newStatus && $newStatus->is_closed) {
+                $owner = auth()->user()?->full_name ?? 'System';
+                $this->addComment("تم تغيير حالة العميل إلى [{$newStatus->name}] وإغلاق الملف بواسطة {$owner}", CommentType::CLOSED);
+            }
+        }
+
         $this->reset();
+    }
+
+    /**
+     * تنفيذ عملية الإغلاق وإضافة تعليق توثيقي
+     */
+    public function closeLead(string $reasonDetails): void
+    {
+        $this->addComment($reasonDetails, CommentType::CLOSED);
+    }
+
+    /**
+     * دالة لإضافة تعليقات للعميل المحتمل
+     */
+    public function addComment(string $body, CommentType $type = CommentType::NOTE): void
+    {
+        if ($this->lead) {
+            $this->lead->comments()->create([
+                'body' => $body,
+                'type' => $type->value,
+                'user_id' => auth()->id(),
+                'created_by' => auth()->id(),
+            ]);
+        }
     }
 }
