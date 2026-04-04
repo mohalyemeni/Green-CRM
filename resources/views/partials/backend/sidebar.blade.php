@@ -2,7 +2,7 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="index.html" class="logo logo-dark">
+        <a href="{{ route('admin.dashboard') }}" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="{{asset('backend/assets/images/logo-sm.png')}}" alt="" height="22">
             </span>
@@ -11,7 +11,7 @@
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="index.html" class="logo logo-light">
+        <a href="{{ route('admin.dashboard') }}" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{{asset('backend/assets/images/logo-sm.png')}}" alt="" height="22">
             </span>
@@ -82,7 +82,7 @@
                 {{-- العملاء المحتملين --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}"
-                       href="{{ route('admin.leads.index') }}">
+                        href="{{ route('admin.leads.index') }}">
                         <i class="ri-user-star-line"></i>
                         <span data-key="t-leads">العملاء المحتملين (Leads)</span>
                     </a>
@@ -91,7 +91,7 @@
                 {{-- الفرص البيعية --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.opportunities.*') ? 'active' : '' }}"
-                       href="{{ route('admin.opportunities.index') }}">
+                        href="{{ route('admin.opportunities.index') }}">
                         <i class="ri-funds-line"></i>
                         <span data-key="t-opportunities">الفرص البيعية</span>
                     </a>
@@ -100,7 +100,7 @@
                 {{-- أرشيف المرفقات --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.attachments.*') ? 'active' : '' }}"
-                       href="{{ route('admin.attachments.index') }}">
+                        href="{{ route('admin.attachments.index') }}">
                         <i class="ri-archive-2-line"></i>
                         <span data-key="t-attachments">أرشيف المرفقات</span>
                     </a>
@@ -109,7 +109,7 @@
                 {{-- العملاء --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}"
-                       href="{{ route('admin.customers.index') }}">
+                        href="{{ route('admin.customers.index') }}">
                         <i class="ri-team-line"></i>
                         <span data-key="t-customers">العملاء (Customers)</span>
                     </a>
@@ -120,7 +120,7 @@
                 {{-- عروض الأسعار --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.quotations.*') ? 'active' : '' }}"
-                       href="{{ route('admin.quotations.index') }}">
+                        href="{{ route('admin.quotations.index') }}">
                         <i class="ri-file-list-3-line"></i>
                         <span data-key="t-quotations">عروض الأسعار</span>
                     </a>
@@ -130,7 +130,7 @@
                 @php $servicesOpen = request()->routeIs('admin.services.*') || request()->routeIs('admin.service-groups.*'); @endphp
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarServices" data-bs-toggle="collapse"
-                       role="button" aria-expanded="{{ $servicesOpen ? 'true' : 'false' }}" aria-controls="sidebarServices">
+                        role="button" aria-expanded="{{ $servicesOpen ? 'true' : 'false' }}" aria-controls="sidebarServices">
                         <i class="ri-customer-service-2-line"></i>
                         <span data-key="t-services">الخدمات</span>
                     </a>
@@ -138,13 +138,13 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="{{ route('admin.services.index') }}"
-                                   class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}"
-                                   data-key="t-services-list">قائمة الخدمات</a>
+                                    class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}"
+                                    data-key="t-services-list">قائمة الخدمات</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.service-groups.index') }}"
-                                   class="nav-link {{ request()->routeIs('admin.service-groups.*') ? 'active' : '' }}"
-                                   data-key="t-service-groups">مجموعات الخدمات</a>
+                                    class="nav-link {{ request()->routeIs('admin.service-groups.*') ? 'active' : '' }}"
+                                    data-key="t-service-groups">مجموعات الخدمات</a>
                             </li>
                         </ul>
                     </div>
@@ -156,7 +156,7 @@
                 @php $salesSettingsOpen = request()->routeIs('admin.pipeline-stages.*') || request()->routeIs('admin.lead-statuses.*') || request()->routeIs('admin.lead-sources.*') || request()->routeIs('admin.opportunity-sources.*') || request()->routeIs('admin.lost-reasons.*') || request()->routeIs('admin.customer-groups.*'); @endphp
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarSalesSettings" data-bs-toggle="collapse"
-                       role="button" aria-expanded="{{ $salesSettingsOpen ? 'true' : 'false' }}" aria-controls="sidebarSalesSettings">
+                        role="button" aria-expanded="{{ $salesSettingsOpen ? 'true' : 'false' }}" aria-controls="sidebarSalesSettings">
                         <i class="ri-settings-4-line"></i>
                         <span data-key="t-sales-settings">إعدادات المبيعات</span>
                     </a>
@@ -188,7 +188,7 @@
                 @php $masterDataOpen = request()->routeIs('admin.companies.*') || request()->routeIs('admin.branches.*') || request()->routeIs('admin.industries.*') || request()->routeIs('admin.currencies.*') || request()->routeIs('admin.countries.*'); @endphp
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarMasterData" data-bs-toggle="collapse"
-                       role="button" aria-expanded="{{ $masterDataOpen ? 'true' : 'false' }}" aria-controls="sidebarMasterData">
+                        role="button" aria-expanded="{{ $masterDataOpen ? 'true' : 'false' }}" aria-controls="sidebarMasterData">
                         <i class="ri-database-2-line"></i>
                         <span data-key="t-master-data">البيانات الأساسية</span>
                     </a>
