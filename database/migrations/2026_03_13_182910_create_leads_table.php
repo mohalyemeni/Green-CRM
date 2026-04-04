@@ -21,10 +21,10 @@ return new class extends Migration
             $table->string('full_name', 255)->virtualAs('concat(first_name, " ", last_name)'); // اسم كامل مولد تلقائياً
 
             // --- بيانات التواصل ---
-            $table->string('email', 150)->nullable()->index();
-            $table->string('phone', 50)->nullable();
             $table->string('mobile', 50)->nullable()->index();
-            $table->string('other_mobile', 50)->nullable();
+            $table->string('whatsapp', 50)->nullable()->index();
+            $table->string('phone', 50)->nullable()->comment('رقم هاتف');
+            $table->string('email', 150)->nullable()->index();
 
             // --- بيانات العمل والشركة التابعة للعميل ---
             $table->string('job_title', 150)->nullable();
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->foreignId('industry_id')->nullable()->constrained('industries')->onDelete('set null');
 
             // الموظف المسؤول (Owner)
-            $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
 
             // --- الموقع الجغرافي (من ملفاتك: Countries) ---
             $table->foreignId('country_id')->nullable()->constrained('countries')->onDelete('set null');
